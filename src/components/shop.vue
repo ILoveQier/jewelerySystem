@@ -2,6 +2,7 @@
   <div class="shop-container"
        @touchstart="touchStart($event)"
        @touchend="touchEnd($event)"
+       @click="goDetail"
        :data-type="typeVal">
     <div class="shop-info">
       <span class="name-info">{{shop.shopname}}</span>
@@ -9,7 +10,8 @@
         <span>{{shop.company}}</span>
         &nbsp;|&nbsp;
         <span>{{shop.location}}</span>
-        <img src="/static/images/unlocation.png" alt="">
+        <img src="/static/images/unlocation.png"
+             alt="">
       </div>
     </div>
     <!-- 根据店铺的评级判断展示方式 -->
@@ -57,9 +59,14 @@ export default {
     deleteItem(index) {
       let title = '店铺诊断记录删除不可恢复'
       let subtitle = '确定要删除吗'
-      $util.showModal(title, subtitle,'删除','#A9A9A9','#82343B').then(res=>{
-          res ? this.$emit('goDel', index) : 0
+      $util.showModal(title, subtitle, '删除', '#A9A9A9', '#82343B').then(res => {
+        res ? this.$emit('goDel', index) : 0
       })
+    },
+    goDetail() {
+      wx.navigateTo({
+        url: '/pages/home/detail/main?shop=' + JSON.stringify(this.shop),
+      });
     }
   },
 }

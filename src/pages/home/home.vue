@@ -38,7 +38,7 @@ export default {
   methods: {
     goDel(index) {
       this.shopList.splice(index,1)
-    }
+    },
   },
   onLoad() {
     this.shopList = [
