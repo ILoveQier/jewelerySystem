@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/me/main",
+    "pages/me/issue/main",
+    "pages/home/main",
+    "pages/diagnosis/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#B9A367",
+    "navigationBarTitleText": "珠宝店铺诊断",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#909399",
+    "selectedColor": "#000",
+    "position": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/home/main",
+        "iconPath": "/static/tabs/unhome.png",
+        "selectedIconPath": "/static/tabs/home.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/diagnosis/main",
+        "iconPath": "/static/tabs/create.png",
+        "selectedIconPath": "/static/tabs/create.png",
+        "text": "新建诊断"
+      },
+      {
+        "pagePath": "pages/me/main",
+        "iconPath": "/static/tabs/unmy.png",
+        "selectedIconPath": "/static/tabs/my.png",
+        "text": "我的"
+      }
+    ]
+  }
+}
