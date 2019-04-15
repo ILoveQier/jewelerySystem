@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <img src="/static/images/top-bgc.png"
+    <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/top-bgc.png"
          mode='aspectFill'
          class="top-bgc">
     <span class="shop-title">店铺列表</span>
@@ -15,7 +15,7 @@
     <div class="no-shop"
          v-else>
       <div class="begin-shop">
-        <img src="/static/images/no-shops.png"
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/no-shops.png"
              mode='aspectFill'
              class="no-shop-alt">
         <span class="no-shop-words">暂无店铺诊断记录</span>

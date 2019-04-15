@@ -2,7 +2,7 @@
   <div class="me-container">
     <div class="me-infos">
       <div class="me-intro">
-        <img src="/static/images/user.png">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/user.png">
         <span>haru000</span>
       </div>
       <div class="me-shop-intro">
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="issue-reports">
-      <img src="/static/images/report-issue.png">
+      <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/report-issue.png">
       <span>使用时发现问题？</span>
       <div @click="goReport">问题反馈</div>
     </div>

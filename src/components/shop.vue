@@ -10,7 +10,7 @@
         <span>{{shop.company}}</span>
         &nbsp;|&nbsp;
         <span>{{shop.location}}</span>
-        <img src="/static/images/unlocation.png"
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/unlocation.png"
              alt="">
       </div>
     </div>
