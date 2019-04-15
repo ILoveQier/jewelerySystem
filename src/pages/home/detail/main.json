@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "i-tab-bar": "/iView/tab-bar/index",
+    "i-tab-bar-item": "/iView/tab-bar-item/index",
+    "i-tabs": "/iView/tabs/index",
+    "i-tab": "/iView/tab/index"
+  }
+}

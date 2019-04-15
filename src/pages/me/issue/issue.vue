@@ -30,8 +30,8 @@ export default {
   methods: {
     goReport() {
       $utils.showModal('您的问题描述已提交',
-      '确认问题后会有专人与您联系,感谢您对我们的支持~',
-      '确定','','#914C53',false)
+        '确认问题后会有专人与您联系,感谢您对我们的支持~',
+        '确定', '', '#914C53', false)
     }
   },
 }
@@ -64,6 +64,8 @@ export default {
       input {
         width: 50%;
       }
+      padding-bottom: 50rpx;
+      border-bottom: 2rpx solid #eee;
     }
     .go-report {
       background: #c1a46c;
