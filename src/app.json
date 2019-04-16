@@ -1,12 +1,19 @@
 {
   "pages": [
+    "pages/diagnosis/location/main",
     "pages/home/main",
+    "pages/diagnosis/brand/main",
     "pages/home/detail/main",
     "pages/index/main",
     "pages/me/main",
     "pages/me/issue/main",
     "pages/diagnosis/main"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#B9A367",
@@ -25,7 +32,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/diagnosis/main",
+        "pagePath": "pages/diagnosis/location/main",
         "iconPath": "/static/tabs/create.png",
         "selectedIconPath": "/static/tabs/create.png",
         "text": "新建诊断"
