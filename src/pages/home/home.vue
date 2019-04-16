@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import Shop from '@/components/shop.vue'
+import Shop from './shop'
 export default {
   components: {
     Shop

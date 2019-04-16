@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import $util from '../utils/wxUtils.js'
+import $util from '../../utils/wxUtils.js'
 export default {
   props: ['shop', 'index'],
   data() {

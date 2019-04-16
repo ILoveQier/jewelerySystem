@@ -25,7 +25,8 @@
              @click="getGeo">
       </div>
       <div class="city-wrap"
-           v-if="loc">
+           v-if="loc"
+           @click="goNextPage">
         <div class="city">
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
                alt="">
@@ -39,8 +40,10 @@
 <script>
 import $utils from '../../../utils/wxUtils.js'
 import MyMap from './myMap'
+import { mapState } from "vuex";
+
 export default {
-  components:{
+  components: {
     MyMap
   },
   data() {
@@ -52,12 +55,22 @@ export default {
       valList: []
     }
   },
+  computed: {
+    ...mapState(["brandObj"])
+  },
   methods: {
+    goNextPage() {
+      wx.navigateTo({
+        url: '/pages/diagnosis/brand/main',
+      });
+    },
     getCity(item) {
       this.loc = item.cityName
+      this.brandObj.loc = this.loc
     },
     confirmVal(item) {
       this.loc = item
+      this.brandObj.loc = this.loc
       this.searchVal = ''
     },
     inputVal(e) {
@@ -109,6 +122,7 @@ export default {
             },
             success: async res => {
               this.loc = res.data.result.addressComponent.city
+              this.brandObj.loc = this.loc
               this.stopRefresh()
             },
             fail: res => {

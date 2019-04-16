@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/diagnosis/location/main",
     "pages/home/main",
+    "pages/diagnosis/location/main",
     "pages/diagnosis/brand/main",
     "pages/home/detail/main",
     "pages/index/main",
