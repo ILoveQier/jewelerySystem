@@ -6,7 +6,7 @@ var baseWebpackConfig = require('./webpack.base.conf')
 // var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var MpvueVendorPlugin = require('webpack-mpvue-vendor-plugin')
-// var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // copy from ./webpack.prod.conf.js
 var path = require('path')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -36,6 +36,9 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('[id].js')
   },
   plugins: [
+    // new UglifyJsPlugin({
+    //   sourceMap: true
+    // }),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
@@ -81,8 +84,6 @@ module.exports = merge(baseWebpackConfig, {
     //   inject: true
     // }),
     new FriendlyErrorsPlugin(),
-    // new UglifyJsPlugin({
-    //   sourceMap: true
-    // })
+  
   ]
 })

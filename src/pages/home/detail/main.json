@@ -1,3 +1,7 @@
 {
-  "navigationBarTitleText": "店铺诊断记录"
+  "navigationBarTitleText": "店铺诊断记录",
+  "usingComponents": {
+    "i-row": "/iView/row/index",
+    "i-col": "/iView/col/index"
+  }
 }
