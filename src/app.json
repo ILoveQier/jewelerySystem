@@ -1,13 +1,13 @@
 {
   "pages": [
+    "pages/diagnosis/main",
     "pages/home/main",
     "pages/diagnosis/brand/main",
     "pages/diagnosis/location/main",
     "pages/home/detail/main",
     "pages/index/main",
     "pages/me/main",
-    "pages/me/issue/main",
-    "pages/diagnosis/main"
+    "pages/me/issue/main"
   ],
   "permission": {
     "scope.userLocation": {

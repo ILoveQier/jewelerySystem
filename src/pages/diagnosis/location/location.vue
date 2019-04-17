@@ -24,9 +24,9 @@
              :animation="animationData"
              @click="getGeo">
       </div>
-      <div class="city-wrap"
-           @click="goNextPage">
+      <div class="city-wrap">
         <div class="city"
+             @click="goNextPage"
              v-if="loc">
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
                alt="">
