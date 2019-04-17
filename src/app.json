@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/home/main",
-    "pages/diagnosis/location/main",
     "pages/diagnosis/brand/main",
+    "pages/diagnosis/location/main",
     "pages/home/detail/main",
     "pages/index/main",
     "pages/me/main",

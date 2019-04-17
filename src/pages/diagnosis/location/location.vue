@@ -6,16 +6,16 @@
       <input placeholder="搜索"
              @input='inputVal'
              v-model="searchVal"
+             placeholder-style='font-size:30rpx;color:#9C9C9D'
              maxlength="10"
              type="text" />
-      <dir class="val-list"
-           :class="{golist:searchVal}"
+      <div class="val-list"
            v-if="searchVal">
         <div v-for="item in valList"
              class="val-item"
              @click="confirmVal(item)"
              :key='item'>{{item}}</div>
-      </dir>
+      </div>
     </div>
     <div class="loc-current">
       <div class="current-city">
@@ -160,6 +160,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
   .loc-search {
     margin-top: 30rpx;
     width: 90%;
@@ -168,18 +169,17 @@ export default {
     display: flex;
     align-items: center;
     background-color: #f7f7fa;
-    position: relative;
     img {
       width: 30rpx;
       height: 30rpx;
-      margin-right: 30rpx;
+      margin-right: 15rpx;
     }
     .val-list {
       height: 100vh;
-      top: 90rpx;
-      left: -30rpx;
+      top: 120rpx;
+      left: 0;
       position: absolute;
-      width: 120%;
+      width: 100%;
       background-color: #fff;
       z-index: 99;
       .val-item {
@@ -200,10 +200,7 @@ export default {
       line-height: 100rpx;
       vertical-align: middle;
       span {
-        color: #333333;
         font-size: 32rpx;
-        font-family: PingFangSC-Regular, sans-serif;
-        letter-spacing: 3rpx;
         float: left;
       }
       img {
