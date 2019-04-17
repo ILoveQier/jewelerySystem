@@ -25,9 +25,9 @@
              @click="getGeo">
       </div>
       <div class="city-wrap"
-           v-if="loc"
            @click="goNextPage">
-        <div class="city">
+        <div class="city"
+             v-if="loc">
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
                alt="">
           <span>{{loc}}</span>

@@ -166,9 +166,6 @@ export default {
         text-align: center;
         margin-bottom: 20rpx;
         font-size: 28rpx;
-        &:hover {
-          background-color: #eee;
-        }
       }
     }
   }
