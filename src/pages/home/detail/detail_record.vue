@@ -10,7 +10,8 @@
          class="row-wrap"
          v-for="i in 5"
          :key='i'>
-      <i-row i-class='record-row'>
+      <i-row i-class='record-row'
+             @click="goRecordDetail">
         <i-col span="6">19/03</i-col>
         <i-col span="6">月度诊断</i-col>
         <i-col span="6">83%</i-col>
@@ -22,7 +23,13 @@
 </template>
 <script>
 export default {
-
+  methods: {
+    goRecordDetail() {
+      wx.navigateTo({
+        url: '/pages/home/detail/recordDetail/main',
+      });
+    }
+  },
 }
 </script>
 <style lang="less">
@@ -52,10 +59,10 @@ export default {
     }
   }
   button {
-    background-color: #7F2F37;
+    background-color: #7f2f37;
     color: #fff;
     &.go-tap {
-    background-color: #642f17;
+      background-color: #642f17;
     }
   }
 }

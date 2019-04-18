@@ -146,7 +146,23 @@ export default {
     }
   },
   onLoad() {
-
+    this.shopObj = {
+      diagType: 'month',
+      diagMonthDate: '',
+      diagFreeDate: {
+        startDate: '',
+        endDate: '',
+      },
+      name: '',
+      size: '',
+      rent: '',
+      people: '',
+      stock: 0,
+      sale: 0,
+      goldSale: 0,
+      goldStock: 0,
+      goldRate: 0
+    }
   }
 }
 </script>
