@@ -33,8 +33,14 @@
             <span>月度诊断</span>
           </div>
           <div>
-            <span style="color:#7f2f37">2019/03</span>
-            <span class="arrow"></span>
+            <picker mode="date"
+                    start="2015-09"
+                    end="2019-09"
+                    fields='month'
+                    @change="dateChange">
+              <span style="color:#7f2f37">{{shopObj.diagMonthDate || diagDate}}</span>
+              <span class="arrow"></span>
+            </picker>
           </div>
         </label>
         <label class="radio"
@@ -46,8 +52,12 @@
             <span>自定义周期诊断</span>
           </div>
           <div>
-            <span>起始年/月 - 终止年/月</span>
-            <span class="arrow"></span>
+            <picker mode="multiSelector"
+                    @change="multiChange"
+                    :range="multiDate">
+              <span>{{shopObj.diagFreeDate.startDate || '起始年/月'}} - {{shopObj.diagFreeDate.endDate || '终止年/月'}}</span>
+              <span class="arrow"></span>
+            </picker>
           </div>
         </label>
       </radio-group>
@@ -67,8 +77,14 @@ export default {
   },
   data() {
     return {
+      multiDate: [['2027/09', '2017/10', '2017/11', '2017/12', '2018/01', '2018/02', '2018/03', '2019/04'], ['2018/09', '2018/10', '2018/11', '2018/12', '2019/01', '2019/02', '2019/03', '2019/04']],
       shopObj: {
         diagType: 'month',
+        diagMonthDate: '',
+        diagFreeDate: {
+          startDate: '',
+          endDate: '',
+        },
         name: '',
         size: '',
         rent: '',
@@ -82,15 +98,52 @@ export default {
     }
   },
   methods: {
+    multiChange(e) {
+      const dateObj = e.mp.detail.value
+      const startDate = this.multiDate[0][dateObj[0]]
+      const endDate = this.multiDate[1][dateObj[1]]
+      if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
+        return $utils.showModal('起始日期不能大于终止日期', '请重新选择', '确定', '', '#000', false)
+      }
+      this.shopObj.diagFreeDate.startDate = startDate
+      this.shopObj.diagFreeDate.endDate = endDate
+    },
+    dateChange(e) {
+      this.shopObj.diagMonthDate = e.mp.detail.value.replace('-', '/')
+    },
     goDiagnosis() {
-      console.log(this.shopObj);
+      if (this.shopObj.diagType === 'month') {
+        this.shopObj.diagMonthDate = this.diagDate
+      }
+      // 放到vuex中
+      this.brandObj.shopObj = this.shopObj
+      if (this.shopObj.diagType === 'free' && !this.shopObj.diagFreeDate.startDate) {
+        return $utils.showModal('部分必要信息未填写', '自定义周期没有选择日期', '继续填写', '#999', '#7F2F37', true, '稍后再填')
+      }
+      for (const i in this.shopObj) {
+        if (!this.shopObj[i] && i !== '__newReference') {
+          return $utils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', '继续填写', '#999', '#7F2F37', true, '稍后再填').then(res => {
+            // 点击取消跳转到主页
+            if (res === 'continue') {
+              wx.switchTab({
+                url: '/pages/home/main'
+              });
+            }
+          })
+        }
+      }
     },
     radioChange(e) {
       this.shopObj.diagType = e.mp.detail.value
     }
   },
   computed: {
-    ...mapState(["brandObj"])
+    ...mapState(["brandObj"]),
+    diagDate: () => {
+      let year = new Date().getFullYear()
+      let month = new Date().getMonth()
+      return year + '/' + (month < 10 ? '0' : '') + month
+    }
   },
   onLoad() {
 

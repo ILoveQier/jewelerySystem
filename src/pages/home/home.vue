@@ -26,9 +26,14 @@
 </template>
 <script>
 import Shop from './shop'
+import { mapState } from "vuex";
+
 export default {
   components: {
     Shop
+  },
+  computed: {
+    ...mapState(["brandObj"]),
   },
   data() {
     return {
@@ -37,7 +42,7 @@ export default {
   },
   methods: {
     goDel(index) {
-      this.shopList.splice(index,1)
+      this.shopList.splice(index, 1)
     },
   },
   onLoad() {

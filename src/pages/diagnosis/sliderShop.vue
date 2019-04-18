@@ -1,6 +1,5 @@
 <template>
   <div class="shop-inside-container">
-
     <div class="shop-inside">
       <span class="title">填写店铺详情</span>
       <div class="inside-info">
@@ -8,8 +7,7 @@
           <span>店铺面积</span>
           <input type="number"
                  maxlength="5"
-               v-model="shopObj.size"
-
+                 v-model="shopObj.size"
                  placeholder="请输入店铺面积"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">平方米</span>
@@ -18,8 +16,7 @@
           <span>店铺租金</span>
           <input type="number"
                  maxlength="7"
-               v-model="shopObj.rent"
-
+                 v-model="shopObj.rent"
                  placeholder="请输入店铺租金"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">万元</span>
@@ -28,8 +25,7 @@
           <span>店员人数</span>
           <input type="number"
                  maxlength="3"
-               v-model="shopObj.people"
-
+                 v-model="shopObj.people"
                  placeholder="请输入店员人数"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">人</span>

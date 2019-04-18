@@ -1,6 +1,7 @@
 export default {
   brandObj: {
     loc: '',
-    brandName: ''
+    brandName: '',
+    shopObj:{}
   }
 }

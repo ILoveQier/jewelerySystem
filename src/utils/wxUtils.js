@@ -1,6 +1,8 @@
 export default {
-  showModal: function (title, content, confirmText, cancelColor, confirmColor, showCancel) {
-    return new Promise((resolve) => {
+  showModal: function (title, content, confirmText, cancelColor, confirmColor, showCancel, cancelText) {
+    let result = ''
+
+    return new Promise(resolve => {
       wx.showModal({
         title,
         content,
@@ -8,10 +10,16 @@ export default {
         cancelColor,
         confirmColor,
         showCancel,
-        success: (res) => {
-          resolve(res.confirm)
+        cancelText,
+        success: res => {
+          if (res.cancel) {
+            result = 'continue'
+            resolve(result)
+          }
         }
       })
+
+      
     })
   },
   sleep: async (duration) => {
@@ -29,7 +37,7 @@ export default {
         //点击“确认”时打开设置页面
         if (res.confirm) {
           wx.openSetting({
-            success: (res) => { 
+            success: (res) => {
               callback()
             }
           })
