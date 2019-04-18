@@ -1,7 +1,5 @@
 export default {
-  showModal: function (title, content, confirmText, cancelColor, confirmColor, showCancel, cancelText) {
-    let result = ''
-
+  showModal: function (title, content, confirmText, cancelColor, confirmColor, showCancel, cancelText='取消') {
     return new Promise(resolve => {
       wx.showModal({
         title,
@@ -12,14 +10,13 @@ export default {
         showCancel,
         cancelText,
         success: res => {
-          if (res.cancel) {
-            result = 'continue'
-            resolve(result)
+          if (res.confirm) {
+            resolve('confirm')
+          } else if (res.cancel) {
+            resolve('cancel')
           }
         }
       })
-
-      
     })
   },
   sleep: async (duration) => {

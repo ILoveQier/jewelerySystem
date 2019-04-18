@@ -124,7 +124,7 @@ export default {
         if (!this.shopObj[i] && i !== '__newReference') {
           return $utils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', '继续填写', '#999', '#7F2F37', true, '稍后再填').then(res => {
             // 点击取消跳转到主页
-            if (res === 'continue') {
+            if (res === 'cancel') {
               wx.switchTab({
                 url: '/pages/home/main'
               });

@@ -1,5 +1,5 @@
 <template>
-  <div class="index-level-container">
+  <div class="return-rate-container">
     <div class="left">
       <span>库存回报率</span>
       <span class="red"
@@ -96,7 +96,7 @@ export default {
 }
 </script> 
 <style lang="less" scoped>
-.index-level-container {
+.return-rate-container {
   width: 90%;
   height: 300rpx;
   padding: 0 30rpx;

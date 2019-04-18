@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/home/main",
     "pages/home/detail/recordDetail/main",
+    "pages/home/main",
     "pages/home/detail/main",
     "pages/diagnosis/main",
     "pages/diagnosis/brand/main",

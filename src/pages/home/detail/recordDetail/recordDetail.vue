@@ -10,18 +10,21 @@
              alt="">
       </div>
     </div>
-    <IndexLevel></IndexLevel>
+    <ReturnRate></ReturnRate>
+    <IndexRate></IndexRate>
   </div>
 </template>
 <script>
-import IndexLevel from './index_level'
+import IndexRate from './index_rate'
+import ReturnRate from './return_rate'
 export default {
   components: {
-    IndexLevel
+    ReturnRate,
+    IndexRate
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .record-detail-container {
   min-height: 100vh;
   width: 100%;
