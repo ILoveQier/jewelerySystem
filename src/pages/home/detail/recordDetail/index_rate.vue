@@ -13,6 +13,7 @@
         <div class="title">{{obj.name}}</div>
         <div class="block-wrap">
           <div class="block"
+               @click="$emit('clickItem',item)"
                v-for="(item,i) in obj.obj"
                :key="i">
             <span>{{item[1]}}</span>
@@ -65,6 +66,13 @@ export default {
   methods: {
     draw(data) {
       let option = {
+        dataZoom: {
+          type: 'inside',
+          show: false,
+          realtime: true, //拖动滚动条时是否动态的更新图表数据
+          start: 1,//滚动条开始位置（共100等份）
+          end: 90//结束位置（共100等份）
+        },
         xAxis: {
           type: 'category',
           boundaryGap: true,
@@ -124,7 +132,7 @@ export default {
           backgroundColor: '#F7F7FA',
           borderColor: 'transparent',
           left: 40,
-          top: 30
+          top: 20,
         },
         series: [{
           data: data,
@@ -132,7 +140,7 @@ export default {
           itemStyle: {
             color: '#a57'
           },
-          barMaxWidth: 20
+          barMaxWidth: 20,
         }],
       };
       // 
@@ -140,14 +148,14 @@ export default {
     },
     initChart(canvas) {
       chart = echarts.init(canvas, null, {
-        width: 400,
+        width: 350,
         height: 250
       });
       canvas.setChart(chart);
       return chart
     },
   },
-  async onLoad(ops) {
+  async onLoad() {
     let data = []
     this.indexObj = {
       benefit: {
@@ -195,7 +203,7 @@ export default {
   }
   .echart {
     width: 100%;
-    height: 420rpx;
+    height: 500rpx;
   }
   .level-show {
     display: flex;
@@ -297,7 +305,7 @@ export default {
         margin-right: 10rpx;
       }
       span {
-        color: #7F2F37;
+        color: #7f2f37;
         font-size: 34rpx;
       }
     }
