@@ -6,6 +6,43 @@
                      canvasId='ec-canvas1'
                      :onInit="onInit" />
     </div>
+    <div class="level-show">
+      <div class="level"
+           v-for="obj in indexObj"
+           :key="obj">
+        <div class="title">{{obj.name}}</div>
+        <div class="block-wrap">
+          <div class="block"
+               v-for="(item,i) in obj.obj"
+               :key="i">
+            <span>{{item[1]}}</span>
+            <span>{{item[0]}}</span>
+            <span>中等</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="result">
+      <div class="title">诊断结果</div>
+      <div class="words"></div>
+    </div>
+    <div class="share">
+      <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/share.png"
+           alt="">
+      <span>分享</span>
+    </div>
+    <footer>
+      <div class="footer-item">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/sett.png"
+             alt="">
+        <span>修改诊断数据</span>
+      </div>
+      <div class="footer-item">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/del.png"
+             alt="">
+        <span>删除本期诊断</span>
+      </div>
+    </footer>
   </div>
 </template>
 <script scoped>
@@ -115,13 +152,16 @@ export default {
     this.indexObj = {
       benefit: {
         obj: [['毛利率', 29], ['店铺坪效', 34]],
-        color: '#ACCFF4'
+        color: '#ACCFF4',
+        name: '盈利水平'
       }, stock: {
         obj: [['月库存周转率', 41], ['库存结构', 61], ['总库存标准', 15]],
-        color: '#C67D82'
+        color: '#C67D82',
+        name: '库存配置水平'
       }, employee: {
         obj: [['月均人员绩效', 18], ['店员数量', 21]],
-        color: '#8CC7C7'
+        color: '#8CC7C7',
+        name: '员工技能水平'
       }
     }
     for (const key in this.indexObj) {
@@ -135,24 +175,19 @@ export default {
           }
         })
       }
-
     }
     await $utils.sleep(300)
-
-    console.log(data);
     // 确保只有一个数据的显示
     this.draw(data)
   }
 }
 </script> 
 <style lang="less" scoped>
-canvas {
-  display: block !important;
-}
 .index-rate-container {
   width: 90%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   .title {
     color: #333;
     font-size: 34rpx;
@@ -160,7 +195,112 @@ canvas {
   }
   .echart {
     width: 100%;
-    height: 600rpx;
+    height: 420rpx;
+  }
+  .level-show {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 30rpx 0;
+    .level {
+      margin-bottom: 30rpx;
+      .title {
+        font-size: 34rpx;
+        color: #333;
+        margin-bottom: 20rpx;
+        font-weight: bold;
+      }
+      .block-wrap {
+        display: flex;
+        .block {
+          width: 220rpx;
+          height: 180rpx;
+          box-shadow: 0 0 20rpx #eee;
+          margin-right: 20rpx;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          padding: 20rpx;
+          box-sizing: border-box;
+          position: relative;
+          span {
+            &:nth-child(1) {
+              font-size: 44rpx;
+              font-weight: bold;
+            }
+            &:nth-child(2) {
+              font-size: 26rpx;
+              color: #97a0ad;
+            }
+            &:nth-child(3) {
+              position: absolute;
+              width: 72rpx;
+              height: 32rpx;
+              background-color: red;
+              text-align: center;
+              line-height: 32rpx;
+              color: #fff;
+              font-size: 18rpx;
+              right: 0;
+              top: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  .result {
+    width: 90%;
+    margin-bottom: 50rpx;
+    .title {
+      font-size: 34rpx;
+      color: #333;
+      margin-bottom: 20rpx;
+    }
+    .words {
+      width: 100%;
+      height: 250rpx;
+      background-color: #f7f7fa;
+    }
+  }
+  .share {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100rpx;
+    img {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    span {
+      color: #c1a46c;
+      font-size: 28rpx;
+    }
+  }
+  footer {
+    display: flex;
+    align-items: center;
+    width: 120%;
+    .footer-item {
+      width: 50%;
+      border: 2rpx solid #eee;
+      box-sizing: border-box;
+      height: 100rpx;
+      line-height: 100rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 40rpx;
+        height: 40rpx;
+        margin-right: 10rpx;
+      }
+      span {
+        color: #7F2F37;
+        font-size: 34rpx;
+      }
+    }
   }
 }
 </style>
