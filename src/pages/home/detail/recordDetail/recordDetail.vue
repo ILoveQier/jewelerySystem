@@ -13,6 +13,7 @@
     <ReturnRate></ReturnRate>
     <IndexRate @clickItem='clickItem'></IndexRate>
     <div class="dialog"
+         catchtouchmove
          :class="{show:flag}">
       <div class="title">
         <span>{{item[0]}}</span>
@@ -25,7 +26,23 @@
         指标含义。。。
       </div>
       <div class="progress">
-
+        <div class="split">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="split-words">
+          <span style="color:#BF99C1">不及格</span>
+          <span style="color:#BE696D">及格</span>
+          <span style="color:#C9B07F">中等</span>
+          <span style="color:#B7CCE2">良好</span>
+          <span style="color:#C1E9F5">优秀</span>
+        </div>
+        <wxc-progress :percent="item[1]"
+                      v-if="showPro"
+                      stroke-width="20"
+                      :active-color="acColor"></wxc-progress>
       </div>
     </div>
   </div>
@@ -33,29 +50,63 @@
 <script>
 import IndexRate from './index_rate'
 import ReturnRate from './return_rate'
+import $utils from '../../../../utils/wxUtils.js'
 export default {
   components: {
     ReturnRate,
-    IndexRate
+    IndexRate,
   },
   data() {
     return {
       flag: false,
-      item: {}
+      showPro: false,
+      item: {},
+      scrollTop:0
+    }
+  },
+  computed: {
+    acColor() {
+      let color = '#BF99C1,'
+      let ac = this.item[1]
+      if (ac < 20 || !ac) {
+        color = '#BF99C1'
+      } else if (ac < 40) {
+        color += '#BE696D'
+      } else if (ac < 60) {
+        color += '#C9B07F'
+      } else if (ac < 860) {
+        color += '#B7CCE2'
+      } else {
+        color += '#C1E9F5'
+      }
+      setTimeout(() => {
+        this.showPro = true
+      }, 0);
+      return color
     }
   },
   methods: {
     clickItem(item) {
+      if (this.scrollTop<200) {
+        return
+      }
+      this.showPro = false
       this.item = item
       this.flag = true
-    }
+    },
   },
+  onPageScroll: function (e) {
+    this.scrollTop =e.scrollTop
+    if ( this.scrollTop < 200) {
+      this.flag = false
+    }
+  }
 }
 </script>
 <style lang="less" scoped>
 .record-detail-container {
   height: 100%;
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,7 +157,11 @@ export default {
     height: 0;
     background-color: #fff;
     transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .title {
+      overflow: hidden;
       width: 100%;
       padding: 0 30rpx;
       height: 100rpx;
@@ -137,6 +192,41 @@ export default {
     }
     &.show {
       height: 500rpx;
+    }
+    .words {
+      height: 300rpx;
+      background-color: #eee;
+      margin-bottom: 10rpx;
+      width: 100%;
+    }
+    .progress {
+      position: relative;
+      width: 95%;
+      height: 80rpx;
+      .split {
+        width: 80%;
+        height: 20rpx;
+        position: absolute;
+        left: 0;
+        top: -19rpx;
+        span {
+          display: inline-block;
+          width: 5rpx;
+          height: 20rpx;
+          background-color: #fff;
+          margin-left: 24%;
+        }
+      }
+      .split-words {
+        width: 100%;
+        position: absolute;
+        left: 30rpx;
+        bottom: 10%;
+        span {
+          font-size: 24rpx;
+          margin-right: 13%;
+        }
+      }
     }
   }
 }

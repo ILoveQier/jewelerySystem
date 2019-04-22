@@ -1,5 +1,8 @@
 {
   "navigationBarBackgroundColor": "#242020",
   "navigationBarTitleText": "店铺诊断报告",
-  "navigationBarTextStyle": "white"
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "wxc-progress": "/iView/@minui/wxc-progress/dist/index"
+  }
 }

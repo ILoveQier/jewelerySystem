@@ -60,6 +60,7 @@ export default {
     return {
       echarts,
       onInit: this.initChart,
+      
       indexObj: {}
     }
   },
@@ -148,7 +149,7 @@ export default {
     },
     initChart(canvas) {
       chart = echarts.init(canvas, null, {
-        width: 350,
+        width: 380,
         height: 250
       });
       canvas.setChart(chart);
@@ -159,15 +160,15 @@ export default {
     let data = []
     this.indexObj = {
       benefit: {
-        obj: [['毛利率', 29], ['店铺坪效', 34]],
+        obj: [['毛利率', 12], ['店铺坪效', 24]],
         color: '#ACCFF4',
         name: '盈利水平'
       }, stock: {
-        obj: [['月库存周转率', 41], ['库存结构', 61], ['总库存标准', 15]],
+        obj: [['月库存周转率', 31], ['库存结构', 41], ['总库存标准', 55]],
         color: '#C67D82',
         name: '库存配置水平'
       }, employee: {
-        obj: [['月均人员绩效', 18], ['店员数量', 21]],
+        obj: [['月均人员绩效', 68], ['店员数量', 91]],
         color: '#8CC7C7',
         name: '员工技能水平'
       }
@@ -192,7 +193,7 @@ export default {
 </script> 
 <style lang="less" scoped>
 .index-rate-container {
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -208,7 +209,7 @@ export default {
   .level-show {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 90%;
     margin: 30rpx 0;
     .level {
       margin-bottom: 30rpx;
@@ -289,7 +290,7 @@ export default {
   footer {
     display: flex;
     align-items: center;
-    width: 120%;
+    width: 100%;
     .footer-item {
       width: 50%;
       border: 2rpx solid #eee;
