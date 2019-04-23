@@ -1,5 +1,11 @@
 export default {
-  showModal: function (title, content, confirmText, cancelColor, confirmColor, showCancel, cancelText='取消') {
+  showModal: function (title = '提示',
+    content = '',
+    { cancelText = '取消',
+      confirmText = '确定',
+      cancelColor = '#333',
+      confirmColor = '#000',
+      showCancel = true }) {
     return new Promise(resolve => {
       wx.showModal({
         title,

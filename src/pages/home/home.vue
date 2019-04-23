@@ -19,7 +19,7 @@
              mode='aspectFill'
              class="no-shop-alt">
         <span class="no-shop-words">暂无店铺诊断记录</span>
-        <button class="begin">开始诊断</button>
+        <!-- <button class="begin">开始诊断</button> -->
       </div>
     </div>
   </div>
@@ -46,13 +46,6 @@ export default {
     },
   },
   onLoad() {
-    this.$fly.request({
-      method: 'post', // post/get 请求方式
-      url: 'shop/index',
-      body: {}
-    }).then(res => {
-      console.log(res)
-    })
 
     this.shopList = [
       {

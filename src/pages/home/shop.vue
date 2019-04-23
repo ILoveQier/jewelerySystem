@@ -59,7 +59,7 @@ export default {
     deleteItem(index) {
       let title = '店铺诊断记录删除不可恢复'
       let subtitle = '确定要删除吗'
-      $util.showModal(title, subtitle, '删除', '#A9A9A9', '#82343B').then(res => {
+      $util.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' }).then(res => {
         res === 'confirm' ? this.$emit('goDel', index) : 0
       })
     },
