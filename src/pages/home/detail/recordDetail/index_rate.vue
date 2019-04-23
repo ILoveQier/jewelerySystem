@@ -60,7 +60,7 @@ export default {
     return {
       echarts,
       onInit: this.initChart,
-      
+
       indexObj: {}
     }
   },
@@ -148,9 +148,10 @@ export default {
       chart.setOption(option)
     },
     initChart(canvas) {
+      let width = wx.getStorageSync('screenWidth')
       chart = echarts.init(canvas, null, {
-        width: 380,
-        height: 250
+        width: width,
+        height: 5 / 7 * width
       });
       canvas.setChart(chart);
       return chart

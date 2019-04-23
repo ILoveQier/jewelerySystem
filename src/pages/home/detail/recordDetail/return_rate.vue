@@ -33,8 +33,8 @@ export default {
     draw(data) {
       let option = {
         color: ['#C1A46C'],
-        tooltip:{
-          show:false
+        tooltip: {
+          show: false
         },
         title: {
           text: data.rate + '﹪',
@@ -76,9 +76,10 @@ export default {
       chart.setOption(option)
     },
     initChart(canvas) {
+      let width = wx.getStorageSync('screenWidth')
       chart = echarts.init(canvas, null, {
-        width: 200,
-        height: 150
+        width: 0.5 * width,
+        height: 3 / 8 * width
       });
       canvas.setChart(chart);
       return chart
@@ -101,7 +102,7 @@ export default {
   height: 300rpx;
   padding: 0 30rpx;
   box-sizing: border-box;
-  border-bottom: 2rpx dashed #CED5D8;
+  border-bottom: 2rpx dashed #ced5d8;
   display: flex;
   align-items: center;
   .left {

@@ -1,9 +1,5 @@
 <template>
   <div class="index-container">
-    <!-- <button class="btn"
-            v-if="!userId"
-            open-type="getUserInfo"
-            @getuserinfo="handleUserInfo">进入珠宝诊断系统</button> -->
     <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/top-bgc.png"
          mode='aspectFill'
          class="top-bgc">
@@ -23,9 +19,8 @@
 </template>
 
 <script>
-import $utils from '../../utils/wxUtils.js'
+import wxUtils from '../../utils/wxUtils.js';
 let api = require('../../../config/api.js');
-
 export default {
   data() {
     return {
@@ -51,37 +46,30 @@ export default {
     });
   },
   methods: {
-    handleUserInfo: function (e) {
-      wx.showLoading({
-        title: '加载中...',
-      });
+    handleUserInfo: async function (e) {
+      wx.getSystemInfo({
+        success: function (res) {
+          wx.setStorageSync('screenWidth', res.screenWidth);
+        },
+      })
       this.userInfo = e.mp.detail.userInfo;
-      this.$fly.post(api.AuthLoginByWeixin, {
+      let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
         userInfo: e.mp.detail,
         code: this.code,
-        header: {
-          'Content-Type': 'application/json',
-          'X-Jewelry-Token': wx.getStorageSync('token')
-        },
-      }).then(async result => {
-        wx.hideLoading();
-        let res = result.data
-        if (res.errno === 0) {
-          //存储用户信息
-          wx.setStorageSync('userInfo', res.data.userInfo);
-          wx.setStorageSync('token', res.data.token);
-          wx.setStorageSync('userId', res.data.userId);
-          this.userId = res.data.userId
-          wx.switchTab({
-            url: "/pages/home/main",
-          });
-        } else {
-          $utils.showModal('登录失败', res.errmsg || '请授权', { showCancel: false })
-        }
-      }).catch(err => {
-        wx.hideLoading();
-        $utils.showModal('登录失败', err.message || '请授权', { showCancel: false })
       })
+      if (res.errno === 0) {
+        //存储用户信息
+        wx.setStorageSync('userInfo', data.userInfo);
+        wx.setStorageSync('token', data.token);
+        wx.setStorageSync('userId', data.userId);
+        this.userId = data.userId
+        wx.switchTab({
+          url: "/pages/home/main",
+        });
+      } else {
+        wxUtils.showModal('登录失败', res.errmsg || '请授权', { showCancel: false })
+      }
+
     },
   }
 };

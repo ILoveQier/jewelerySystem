@@ -5,11 +5,11 @@
        @click="goDetail"
        :data-type="typeVal">
     <div class="shop-info">
-      <span class="name-info">{{shop.shopname}}</span>
+      <span class="name-info">{{shop.name}}</span>
       <div class="sub-info">
-        <span>{{shop.company}}</span>
+        <span>{{shop.wxJewelryBrand.name}}</span>
         &nbsp;|&nbsp;
-        <span>{{shop.location}}</span>
+        <span>{{shop.wxCity.name}}</span>
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/unlocation.png"
              alt="">
       </div>

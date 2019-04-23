@@ -5,10 +5,10 @@
          class="top-bgc">
     <span class="shop-title">店铺列表</span>
     <div class="have-shop"
-         v-if="shopList.length > 0">
+         v-if="shopsList.length > 0">
       <Shop :shop='shop'
             :index='i'
-            v-for="(shop,i) in shopList"
+            v-for="(shop,i) in shopsList"
             :key="i"
             @goDel="goDel"></Shop>
     </div>
@@ -25,8 +25,10 @@
   </div>
 </template>
 <script>
+import api from '../../../config/api.js'
 import Shop from './shop'
 import { mapState } from "vuex";
+import wxUtils from '../../utils/wxUtils';
 
 export default {
   components: {
@@ -37,42 +39,44 @@ export default {
   },
   data() {
     return {
-      shopList: []
+      shopsList: []
     }
   },
   methods: {
     goDel(index) {
-      this.shopList.splice(index, 1)
+      this.shopsList.splice(index, 1)
     },
   },
-  onLoad() {
-
-    this.shopList = [
-      {
-        shopname: '王超的店铺',
-        company: '大福珠宝',
-        location: '北京',
-        level: 'A'
-      },
-      {
-        shopname: '丽丽的店铺',
-        company: '神奇珠宝',
-        location: '湖北',
-        level: ''
-      },
-      {
-        shopname: '张三的店铺',
-        company: '大福珠宝',
-        location: '天津',
-        level: 'B'
-      },
-      {
-        shopname: '李四的店铺',
-        company: '周润生珠宝',
-        location: '河南',
-        level: 'A'
-      }
-    ]
+  async onLoad() {
+    let {data} = await wxUtils.request(api.ShopList,this)
+    this.shopsList = data.shopsList
+    
+    // this.shopList = [
+    //   {
+    //     shopname: '王超的店铺',
+    //     company: '大福珠宝',
+    //     location: '北京',
+    //     level: 'A'
+    //   },
+    //   {
+    //     shopname: '丽丽的店铺',
+    //     company: '神奇珠宝',
+    //     location: '湖北',
+    //     level: ''
+    //   },
+    //   {
+    //     shopname: '张三的店铺',
+    //     company: '大福珠宝',
+    //     location: '天津',
+    //     level: 'B'
+    //   },
+    //   {
+    //     shopname: '李四的店铺',
+    //     company: '周润生珠宝',
+    //     location: '河南',
+    //     level: 'A'
+    //   }
+    // ]
   }
 }
 </script>

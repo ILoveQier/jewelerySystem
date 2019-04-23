@@ -3,7 +3,7 @@
     <div class="shop-info"
          v-if="shop">
       <div class="name-info">
-        <span>{{shop.shopname}}</span>
+        <span>{{shop.name}}</span>
         <div class="edit-info">
           <span>编辑</span>
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/edt.png"
@@ -11,15 +11,16 @@
         </div>
       </div>
       <div class="sub-info">
-        <span>{{shop.company}}</span>
+        <span>{{shop.wxJewelryBrand.name}}</span>
         &nbsp;|&nbsp;
-        <span>{{shop.location}}</span>
+        <span>{{shop.wxCity.name}}</span>
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/unlocation.png"
              alt="">
       </div>
     </div>
     <DetailEchart></DetailEchart>
     <Record></Record>
+    <button hover-class="go-tap">添加诊断</button>
   </div>
 </template>
 <script>
@@ -42,7 +43,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  box-sizing: border-box;
+  height: 100vh;
   padding: 30rpx;
   .shop-info {
     width: 100%;
@@ -60,7 +62,7 @@ export default {
       align-items: center;
       .edit-info {
         margin-left: 30rpx;
-        color: #AEB5BF;
+        color: #aeb5bf;
         font-size: 26rpx;
         img {
           width: 30rpx;
@@ -69,7 +71,6 @@ export default {
           margin-top: -10rpx;
         }
       }
-      
     }
     .sub-info {
       color: #97a0ad;
@@ -81,10 +82,17 @@ export default {
       }
     }
   }
-  // .echart-wrap {
-  //   width: 100%;
-  //   height: 500rpx;
-  // }
+  button {
+    width: 90%;
+    background-color: #7f2f37;
+    color: #fff;
+    height: 80rpx;
+    line-height: 80rpx;
+    margin-top: 30rpx;
+    &.go-tap {
+      background-color: #642f17;
+    }
+  }
 }
 </style>
 

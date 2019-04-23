@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export default {
   showModal: function (title = '提示',
     content = '',
@@ -48,4 +50,19 @@ export default {
       }
     });
   },
+  request: function (url, vue, params) {
+    wx.showLoading({
+      title: '加载中...',
+    });
+    return new Promise(resolve => {
+      vue.$fly.post(url, params).then(res => {
+        wx.hideLoading();
+        resolve({ data: res.data.data, res: res.data })
+      }).catch(err => {
+        wx.hideLoading();
+        this.showModal('请求失败', 'err', {})
+      })
+
+    })
+  }
 }

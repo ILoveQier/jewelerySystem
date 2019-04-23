@@ -52,12 +52,12 @@ export default {
             start: 1,
             end: 50,//设置X轴刻度之间的间隔(根据数据量来调整)
             zoomLock: true, //锁定区域禁止缩放(鼠标滚动会缩放,所以禁止)
-            disabled:isDisable
+            disabled: isDisable
           },
           {
             type: 'inside',
             zoomLock: true, //锁定区域禁止缩放
-            disabled:isDisable
+            disabled: isDisable
           },],
         xAxis: {
           type: 'category',
@@ -98,15 +98,17 @@ export default {
       chart.setOption(option)
     },
     initChart(canvas) {
+      let width = wx.getStorageSync('screenWidth')
       chart = echarts.init(canvas, null, {
-        width: 380,
-        height: 300
+        width: width,
+        height: 0.75 * width
       });
       canvas.setChart(chart);
       return chart
     },
   },
   async onLoad(ops) {
+
     let isDisable = this.data1.length === 1
     if (this.data1.length < 5) {
       //  不支持forof
