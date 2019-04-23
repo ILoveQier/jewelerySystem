@@ -2,7 +2,14 @@
   <div class="detail-container">
     <div class="shop-info"
          v-if="shop">
-      <span class="name-info">{{shop.shopname}}</span>
+      <div class="name-info">
+        <span>{{shop.shopname}}</span>
+        <div class="edit-info">
+          <span>编辑</span>
+          <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/edt.png"
+               alt="">
+        </div>
+      </div>
       <div class="sub-info">
         <span>{{shop.company}}</span>
         &nbsp;|&nbsp;
@@ -49,6 +56,20 @@ export default {
       color: #333333;
       font-size: 36rpx;
       margin-bottom: 20rpx;
+      display: flex;
+      align-items: center;
+      .edit-info {
+        margin-left: 30rpx;
+        color: #AEB5BF;
+        font-size: 26rpx;
+        img {
+          width: 30rpx;
+          height: 30rpx;
+          vertical-align: middle;
+          margin-top: -10rpx;
+        }
+      }
+      
     }
     .sub-info {
       color: #97a0ad;

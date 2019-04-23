@@ -46,6 +46,14 @@ export default {
     },
   },
   onLoad() {
+    this.$fly.request({
+      method: 'post', // post/get 请求方式
+      url: 'shop/index',
+      body: {}
+    }).then(res => {
+      console.log(res)
+    })
+
     this.shopList = [
       {
         shopname: '王超的店铺',
