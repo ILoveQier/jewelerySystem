@@ -14,7 +14,7 @@
         <div v-for="item in valList"
              class="val-item"
              @click="confirmVal(item)"
-             :key='item'>{{item}}</div>
+             :key='item'>{{item.name}}</div>
       </div>
     </div>
     <div class="loc-current">
@@ -27,10 +27,10 @@
       <div class="city-wrap">
         <div class="city"
              @click="goNextPage"
-             v-if="loc">
+             v-if="loc.id">
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
                alt="">
-          <span>{{loc}}</span>
+          <span>{{loc.name}}</span>
         </div>
       </div>
     </div>
@@ -38,9 +38,10 @@
   </div>
 </template>
 <script>
-import $utils from '../../../utils/wxUtils.js'
 import MyMap from './myMap'
 import { mapState } from "vuex";
+import api from '../../../../config/api.js'
+import wxUtils from '../../../utils/wxUtils.js';
 
 export default {
   components: {
@@ -48,11 +49,12 @@ export default {
   },
   data() {
     return {
-      loc: '',
+      loc: { id: -1, name: '' },
       rotateIndex: 0,
       animationData: {},
       searchVal: '',
-      valList: []
+      valList: [],
+      list: []
     }
   },
   computed: {
@@ -65,7 +67,7 @@ export default {
       });
     },
     getCity(item) {
-      this.loc = item.cityName
+      this.loc = item
       this.brandObj.loc = this.loc
     },
     confirmVal(item) {
@@ -74,14 +76,14 @@ export default {
       this.searchVal = ''
     },
     inputVal(e) {
-      const list = ['北京', '天津', '北海', '黑北', '河南', '河北', '新疆', '海南', '廊坊', '上海']
-      let val = e.mp.detail.value
       this.valList = []
-      list.forEach(item => {
-        if (item.indexOf(val) !== -1) {
+      let val = e.mp.detail.value
+      this.list.forEach(item => {
+        if (item.name.indexOf(val) !== -1) {
           this.valList.push(item)
         }
       })
+      // const list = ['北京', '天津', '北海', '黑北', '河南', '河北', '新疆', '海南', '廊坊', '上海']
     },
     refreshList: function () {
       //连续动画需要添加定时器,所传参数每次+1就行
@@ -98,7 +100,6 @@ export default {
         this.timeInterval = 0
       }
       // 防止快速点击
-      await $utils.sleep(300)
       this.doubleClick = false
     },
     getGeo() {
@@ -121,12 +122,20 @@ export default {
               output: 'json'
             },
             success: async res => {
-              this.loc = res.data.result.addressComponent.city
-              this.brandObj.loc = this.loc
+              let cityName = res.data.result.addressComponent.city
+              this.list.every(item => {
+                // 根据返回的地址 判断
+                if (cityName.indexOf(item.name) !== -1) {
+                  this.loc = item
+                  this.brandObj.loc = this.loc
+                  return
+                }
+              });
               this.stopRefresh()
             },
             fail: res => {
-              this.loc = '未知地点'
+              this.loc = { id: -1, name: '未知地点' }
+              this.brandObj.loc = this.loc
               this.stopRefresh()
             }
           });
@@ -138,7 +147,6 @@ export default {
             success: (res) => {
               if (!res.authSetting['scope.userLocation']) {
                 //打开提示框，提示前往设置页面
-                $utils.openConfirm(this.getGeo)
               }
             }
           })
@@ -150,6 +158,14 @@ export default {
     this.animation = wx.createAnimation({
       duration: 800,
       timingFunction: "linear"
+    })
+    await wxUtils.request(api.CityList, this).then(res => {
+      res.data.forEach(item => {
+        this.list.push({
+          id: item.id,
+          name: item.name
+        })
+      })
     })
     this.getGeo()
   }

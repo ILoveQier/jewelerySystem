@@ -12,9 +12,9 @@
         <div class="details">
           <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
                class="loc">
-          <span>{{brandObj.loc || '未知地点'}}</span>
+          <span>{{brandObj.loc.name || '未知地点'}}</span>
           &nbsp;|&nbsp;
-          <span>{{brandObj.brandName || '未知品牌'}}</span>
+          <span>{{brandObj.brand.name || '未知品牌'}}</span>
         </div>
         <span class="diag-type">{{shopObj.diagType === 'month'?'月度':'自定义周期'}}诊断</span>
       </div>

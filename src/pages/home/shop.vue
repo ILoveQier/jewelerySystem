@@ -5,6 +5,7 @@
        @click="goDetail"
        :data-type="typeVal">
     <div class="shop-info">
+      <span class="name-info">{{shop.id}}</span>
       <span class="name-info">{{shop.name}}</span>
       <div class="sub-info">
         <span>{{shop.wxJewelryBrand.name}}</span>
@@ -78,7 +79,8 @@ export default {
       let subtitle = '确定要删除吗'
       $util.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' })
         .then(res => {
-          res === 'confirm' ? this.$emit('goDel', shopId, index) : (this.typeVal = 0)
+          res === 'confirm' ? this.$emit('goDel', shopId, index) : 0
+          this.typeVal = 0
         })
     },
     goDetail() {

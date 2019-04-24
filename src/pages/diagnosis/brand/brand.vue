@@ -3,7 +3,7 @@
     <div class="brand-search">
       <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/location.png"
            class="loc">
-      <span>{{brandObj.loc}}</span>
+      <span>{{brandObj.loc.name}}</span>
       <div class="search-wrap">
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/search.png"
              class="search">
@@ -18,7 +18,7 @@
           <div v-for="item in valList"
                class="val-item"
                @click="confirmVal(item)"
-               :key='item'>{{item}}</div>
+               :key='item'>{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -29,10 +29,11 @@
       </div>
       <div class="brand-list">
         <div class="brand-name"
+             :class="{red: item.id === brandObj.brand.id}"
              @click="confirmVal(item)"
              v-for="item in brandHotList"
              :key="item">
-          {{item}}
+          {{item.name}}
         </div>
         <div style="width:208rpx"></div>
       </div>
@@ -40,8 +41,9 @@
   </div>
 </template>
 <script>
-import $utils from '../../../utils/wxUtils.js'
+import wxUtils from '../../../utils/wxUtils.js'
 import { mapState } from "vuex";
+import api from '../../../../config/api.js'
 
 export default {
   data() {
@@ -56,26 +58,36 @@ export default {
   },
   methods: {
     confirmVal(item) {
-      this.brandName = item
-      this.brandObj.brandName = this.brandName
+      this.brandName = item.name
+      this.brandObj.brand = item
       this.brandName = ''
       wx.navigateTo({
         url: '/pages/diagnosis/main',
       });
     },
     inputVal(e) {
-      const list = ['周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
+      // const list = ['周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
       let val = e.mp.detail.value
       this.valList = []
-      list.forEach(item => {
-        if (item.indexOf(val) !== -1) {
+      this.brandHotList.forEach(item => {
+        if (item.name.indexOf(val) !== -1) {
           this.valList.push(item)
         }
       })
     },
   },
-  onLoad() {
-    this.brandHotList = ['王超', '纪丽丽', '天使', '周润发', '周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
+  async onLoad() {
+    if (this.brandHotList.length === 0) {
+      await wxUtils.request(api.BrandList, this).then(res => {
+        res.data.forEach(item => {
+          this.brandHotList.push({
+            id: item.id,
+            name: item.name
+          })
+        })
+      })
+    }
+    // this.brandHotList = ['王超', '纪丽丽', '天使', '周润发', '周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
   }
 }
 </script>
@@ -166,6 +178,10 @@ export default {
         text-align: center;
         margin-bottom: 20rpx;
         font-size: 28rpx;
+        &.red {
+          background-color: #7F2F37;
+          color: #fff;
+        }
       }
     }
   }

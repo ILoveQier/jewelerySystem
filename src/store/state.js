@@ -1,8 +1,8 @@
 export default {
   currentIndex: -1,
   brandObj: {
-    loc: '',
-    brandName: '',
+    loc: {},
+    brand: {},
     shopObj: {}
   }
 }
