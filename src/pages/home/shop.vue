@@ -27,7 +27,7 @@
     </div>
 
     <div class="delete"
-         @click.stop="deleteItem(index)">
+         @click.stop="deleteItem(shop.id,index)">
       删除
     </div>
 
@@ -36,11 +36,21 @@
 
 <script>
 import $util from '../../utils/wxUtils.js'
+import { mapState } from "vuex";
 export default {
   props: ['shop', 'index'],
   data() {
     return {
       typeVal: 0, // 用于判断滑动后赋予的值
+    }
+  },
+  computed: mapState([
+    'currentIndex'
+  ]),
+  watch: {
+    // 滑动一个 其他的组件还原  
+    currentIndex: function (newVal, oldVal) {
+      newVal === this.index ? 1 : (this.typeVal = 0)
     }
   },
   methods: {
@@ -52,16 +62,24 @@ export default {
     touchEnd(e, index) {
       // 获取移动距离
       this.endX = e.mp.changedTouches[0].clientX;
-      this.typeVal = (this.startX - this.endX > 50) ? 1 : 0
+      if (this.endX === this.startX || ((this.startX - this.endX > 0) && this.typeVal === 1)) {
+        return
+      }
+      if (this.startX - this.endX > 30) {
+        this.$store.state.currentIndex = this.index
+        this.typeVal = 1
+      } else if (this.endX - this.startX > 30)
+        this.typeVal = 0
     },
 
     // 删除
-    deleteItem(index) {
+    deleteItem(shopId, index) {
       let title = '店铺诊断记录删除不可恢复'
       let subtitle = '确定要删除吗'
-      $util.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' }).then(res => {
-        res === 'confirm' ? this.$emit('goDel', index) : 0
-      })
+      $util.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' })
+        .then(res => {
+          res === 'confirm' ? this.$emit('goDel', shopId, index) : (this.typeVal = 0)
+        })
     },
     goDetail() {
       wx.navigateTo({

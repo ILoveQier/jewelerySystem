@@ -34,49 +34,28 @@ export default {
   components: {
     Shop
   },
-  computed: {
-    ...mapState(["brandObj"]),
-  },
   data() {
     return {
-      shopsList: []
+      shopsList: [],
     }
   },
   methods: {
-    goDel(index) {
-      this.shopsList.splice(index, 1)
+    goDel(shopId, index) {
+      wxUtils.request(api.ShopDelete, this, { shopIds: shopId })
+        .then(res => {
+          wx.showToast({
+            title: '删除成功',
+            duration: 1500,
+            mask: false,
+          });
+          this.shopsList.splice(index, 1)
+        })
     },
   },
   async onLoad() {
-    let {data} = await wxUtils.request(api.ShopList,this)
-    this.shopsList = data.shopsList
     
-    // this.shopList = [
-    //   {
-    //     shopname: '王超的店铺',
-    //     company: '大福珠宝',
-    //     location: '北京',
-    //     level: 'A'
-    //   },
-    //   {
-    //     shopname: '丽丽的店铺',
-    //     company: '神奇珠宝',
-    //     location: '湖北',
-    //     level: ''
-    //   },
-    //   {
-    //     shopname: '张三的店铺',
-    //     company: '大福珠宝',
-    //     location: '天津',
-    //     level: 'B'
-    //   },
-    //   {
-    //     shopname: '李四的店铺',
-    //     company: '周润生珠宝',
-    //     location: '河南',
-    //     level: 'A'
-    //   }
-    // ]
+    let { data } = await wxUtils.request(api.ShopList, this)
+    this.shopsList = data.shopsList
   }
 }
 </script>
