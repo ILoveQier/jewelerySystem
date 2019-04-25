@@ -111,6 +111,10 @@ export default {
     .name-info {
       color: #333333;
       font-size: 36rpx;
+      max-width: 400rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .sub-info {
       color: #97a0ad;

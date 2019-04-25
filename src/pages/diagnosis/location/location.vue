@@ -109,7 +109,7 @@ export default {
       this.doubleClick = true
       this.refreshList()
       const ak = 'EEDg6kuvDhMrXpq83BjtRlVFPTvZDtyi'
-      let url = 'http://api.map.baidu.com/geocoder/v2/'
+      let url = 'https://api.map.baidu.com/geocoder/v2/'
       wx.getLocation({
         success: res => {
           const latitude = res.latitude
