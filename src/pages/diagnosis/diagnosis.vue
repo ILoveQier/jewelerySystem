@@ -68,7 +68,8 @@
   </div>
 </template>
 <script>
-import $utils from '../../utils/wxUtils.js'
+import wxUtils from '../../utils/wxUtils.js'
+import api from '../../../config/api.js'
 import SliderShop from './sliderShop'
 import { mapState } from "vuex";
 export default {
@@ -103,7 +104,7 @@ export default {
       const startDate = this.multiDate[0][dateObj[0]]
       const endDate = this.multiDate[1][dateObj[1]]
       if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
-        return $utils.showModal('起始日期不能大于终止日期', '请重新选择', { showCancel: false })
+        return wxUtils.showModal('起始日期不能大于终止日期', '请重新选择', { showCancel: false })
       }
       this.shopObj.diagFreeDate.startDate = startDate
       this.shopObj.diagFreeDate.endDate = endDate
@@ -111,15 +112,21 @@ export default {
     dateChange(e) {
       this.shopObj.diagMonthDate = e.mp.detail.value.replace('-', '/')
     },
-    goDiagnosis() {
+    async saveDiagnosis() {
+      await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name, brandName: this.brandObj.brand.name }).then(res => {
+        console.log(res);
+      })
+    },
+    async goDiagnosis() {
       if (this.shopObj.diagType === 'month') {
         this.shopObj.diagMonthDate = this.diagDate
       }
       // 放到vuex中
       this.brandObj.shopObj = this.shopObj
       if (this.shopObj.diagType === 'free' && !this.shopObj.diagFreeDate.startDate) {
-        return $utils.showModal('部分必要信息未填写', '自定义周期没有选择日期', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(res => {
+        return wxUtils.showModal('部分必要信息未填写', '自定义周期没有选择日期', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
           if (res === 'cancel') {
+            await this.saveDiagnosis()
             wx.switchTab({
               url: '/pages/home/main'
             });
@@ -128,9 +135,10 @@ export default {
       }
       for (const i in this.shopObj) {
         if (!this.shopObj[i] && i !== '__newReference') {
-          return $utils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(res => {
+          return wxUtils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
             // 点击取消跳转到主页
             if (res === 'cancel') {
+              await this.saveDiagnosis()
               wx.switchTab({
                 url: '/pages/home/main'
               });
@@ -138,6 +146,7 @@ export default {
           })
         }
       }
+
     },
     radioChange(e) {
       this.shopObj.diagType = e.mp.detail.value

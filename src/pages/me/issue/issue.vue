@@ -31,7 +31,7 @@ export default {
     goReport() {
       $utils.showModal('您的问题描述已提交',
         '确认问题后会有专人与您联系,感谢您对我们的支持~',
-        {confirmColor:'#914C53', showCancel:false})
+        { confirmColor: '#914C53', showCancel: false })
     }
   },
 }
@@ -45,6 +45,7 @@ export default {
   display: flex;
   flex-direction: column;
   .issue-info {
+    box-sizing: border-box;
     padding: 30rpx;
     height: 100%;
     background-color: #fff;
@@ -75,7 +76,7 @@ export default {
       font-size: 34rpx;
       line-height: 100rpx;
       text-align: center;
-      margin-top: 70%;
+      margin-top: 30%;
     }
   }
 }

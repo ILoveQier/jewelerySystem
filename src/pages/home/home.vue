@@ -52,7 +52,7 @@ export default {
         })
     },
   },
-  async onLoad() {
+  async onShow() {
     let { data } = await wxUtils.request(api.ShopList, this)
     this.shopsList = data.shopsList
   }
