@@ -93,7 +93,7 @@ export default {
         this.rotateIndex += 1
         this.animation.rotate(360 * (this.rotateIndex)).step()
         this.animationData = this.animation.export()
-      }, 1000)
+      }, 300)
     },
     // 停止旋转
     stopRefresh: async function () {
@@ -104,8 +104,9 @@ export default {
       // 防止快速点击
       this.doubleClick = false
     },
-    getGeo() {
+    async getGeo() {
       if (this.doubleClick) {
+        wxUtils.showModal('正在定位', '请稍后', { showCancel: false })
         return
       }
       this.doubleClick = true
@@ -143,7 +144,8 @@ export default {
           });
         },
         fail: () => {
-          
+          this.loc = { id: -1, name: '未知地点' }
+          this.brandObj.loc = this.loc
           this.stopRefresh()
           //不允许打开定位
           wx.getSetting({

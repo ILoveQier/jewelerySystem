@@ -36,9 +36,9 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('[id].js')
   },
   plugins: [
-    // new UglifyJsPlugin({
-    //   sourceMap: true
-    // }),
+    new UglifyJsPlugin({
+      sourceMap: true
+    }),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
