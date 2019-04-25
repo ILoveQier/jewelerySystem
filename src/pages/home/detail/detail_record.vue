@@ -36,15 +36,17 @@ export default {
 <style lang="less">
 .record-container {
   width: 100%;
+  height: 30%;
   text-align: center;
   .record-title {
+    height: 10%;
     width: 100%;
     font-size: 28rpx;
     color: #727272;
     margin-bottom: 20rpx;
   }
   .rows-wrap {
-    height: 250rpx;
+    height: 80%;
     overflow: scroll;
     .row-wrap {
       margin-bottom: 30rpx;

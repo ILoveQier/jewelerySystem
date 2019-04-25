@@ -95,7 +95,8 @@ export default {
         goldSale: 0,
         goldStock: 0,
         goldRate: 0
-      }
+      },
+      sourceType: 'newShop' // 判断是新建的还是补全的
     }
   },
   methods: {
@@ -161,23 +162,32 @@ export default {
     }
   },
   onLoad() {
-    this.shopObj = {
-      diagType: 'month',
-      diagMonthDate: '',
-      diagFreeDate: {
-        startDate: '',
-        endDate: '',
-      },
-      name: '',
-      size: '',
-      rent: '',
-      people: '',
-      stock: 0,
-      sale: 0,
-      goldSale: 0,
-      goldStock: 0,
-      goldRate: 0
+    if (this.$getRoute().shop) {
+      this.shopObj = JSON.parse(this.$getRoute().shop)
+      this.sourceType = 'patch'
     }
+  },
+  onUnload() {
+    if (this.sourceType === 'patch') {
+      this.shopObj = {
+        diagType: 'month',
+        diagMonthDate: '',
+        diagFreeDate: {
+          startDate: '',
+          endDate: '',
+        },
+        name: '',
+        size: '',
+        rent: '',
+        people: '',
+        stock: 0,
+        sale: 0,
+        goldSale: 0,
+        goldStock: 0,
+        goldRate: 0
+      }
+    }
+    this.sourceType = 'newShop'
   }
 }
 </script>

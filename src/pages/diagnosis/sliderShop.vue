@@ -42,6 +42,7 @@
           </div>
           <slider @changing="sliderChanging($event,'stock')"
                   @change="sliderChanging($event,'stock')"
+                  v-model="shopObj.stock"
                   min="0"
                   max="120"
                   step=5
@@ -60,6 +61,7 @@
           </div>
           <slider @changing="sliderChanging($event,'sale')"
                   @change="sliderChanging($event,'sale')"
+                  v-model="shopObj.sale"
                   min="0"
                   max="290"
                   step=10
@@ -80,6 +82,7 @@
           </div>
           <slider @changing="sliderChanging($event,'goldSale')"
                   @change="sliderChanging($event,'goldSale')"
+                  v-model="shopObj.goldSale"
                   min="0"
                   max="100"
                   step=1
@@ -98,6 +101,7 @@
           </div>
           <slider @changing="sliderChanging($event,'goldStock')"
                   @change="sliderChanging($event,'goldStock')"
+                  v-model="shopObj.goldStock"
                   min="0"
                   max="8000"
                   step=500
@@ -116,6 +120,7 @@
           </div>
           <slider @changing="sliderChanging($event,'goldRate')"
                   @change="sliderChanging($event,'goldRate')"
+                  v-model="shopObj.goldRate"
                   min="0"
                   max="100"
                   step=1
@@ -141,6 +146,9 @@ export default {
 <style lang="less">
 span {
   font-size: 34rpx;
+}
+.shop-inside-container {
+  padding: 0 20rpx;
 }
 .shop-inside {
   display: flex;

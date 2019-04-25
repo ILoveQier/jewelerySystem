@@ -84,6 +84,12 @@ export default {
         })
     },
     goDetail() {
+      // TODO
+      // if (!this.shop.level) {
+      //   wx.navigateTo({
+      //     url: '/pages/diagnosis/main?shop=' + JSON.stringify(this.shop),
+      //   });
+      // }
       wx.navigateTo({
         url: '/pages/home/detail/main?shop=' + JSON.stringify(this.shop),
       });

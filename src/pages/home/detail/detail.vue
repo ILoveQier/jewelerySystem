@@ -75,6 +75,7 @@ export default {
 .detail-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
   height: 100vh;
@@ -153,7 +154,6 @@ export default {
     color: #fff;
     height: 80rpx;
     line-height: 80rpx;
-    margin-top: 30rpx;
     &.go-tap {
       background-color: #642f17;
     }

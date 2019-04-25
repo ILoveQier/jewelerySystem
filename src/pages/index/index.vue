@@ -31,6 +31,11 @@ export default {
   },
   onLoad() {
     let user = wx.getStorageSync('userInfo');
+    wx.getSystemInfo({
+      success: function (res) {
+        wx.setStorageSync('screenWidth', res.screenWidth);
+      },
+    })
     if (!user) {
       wx.login({
         success: (res) => {
@@ -47,17 +52,12 @@ export default {
   },
   methods: {
     handleUserInfo: async function (e) {
-      wx.getSystemInfo({
-        success: function (res) {
-          wx.setStorageSync('screenWidth', res.screenWidth);
-        },
-      })
       this.userInfo = e.mp.detail.userInfo;
-      let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
-        userInfo: e.mp.detail,
-        code: this.code,
-      })
-      if (res.errno === 0) {
+      if (this.userInfo) {
+        let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
+          userInfo: e.mp.detail,
+          code: this.code,
+        })
         //存储用户信息
         wx.setStorageSync('userInfo', data.userInfo);
         wx.setStorageSync('token', data.token);
@@ -67,7 +67,7 @@ export default {
           url: "/pages/home/main",
         });
       } else {
-        wxUtils.showModal('登录失败', res.errmsg || '请授权', { showCancel: false })
+        wxUtils.showModal('登录失败', '请授权', { showCancel: false })
       }
 
     },

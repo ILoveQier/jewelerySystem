@@ -69,11 +69,13 @@ export default {
     getCity(item) {
       this.loc = item
       this.brandObj.loc = this.loc
+      this.goNextPage()
     },
     confirmVal(item) {
       this.loc = item
       this.brandObj.loc = this.loc
       this.searchVal = ''
+      this.goNextPage()
     },
     inputVal(e) {
       this.valList = []
@@ -141,12 +143,14 @@ export default {
           });
         },
         fail: () => {
+          
           this.stopRefresh()
           //不允许打开定位
           wx.getSetting({
             success: (res) => {
               if (!res.authSetting['scope.userLocation']) {
                 //打开提示框，提示前往设置页面
+                wxUtils.openConfirm(this.getGeo)
               }
             }
           })
