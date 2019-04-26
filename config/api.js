@@ -15,4 +15,8 @@ module.exports = {
   CityList: API_BASE_URL + 'city/list', //新增店铺
   BrandList: API_BASE_URL + 'brand/list', //新增店铺
   ShopUpdate: API_BASE_URL + 'shop/update', //更新店铺
+  GetParams: API_BASE_URL +'inputParams/getInputPaaramsRange',//获取平均库存参数
+  DiagnoseList: API_BASE_URL + 'diagnose/index',//获取店铺诊断列表
+  DiagnoseAdd: API_BASE_URL + 'diagnose/add',//新增店铺诊断
+  FeedBack: API_BASE_URL + 'feedback/messages' // 问题反馈
 };

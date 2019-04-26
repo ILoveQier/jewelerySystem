@@ -16,7 +16,7 @@
           &nbsp;|&nbsp;
           <span>{{brandObj.brand.name || '未知品牌'}}</span>
         </div>
-        <span class="diag-type">{{shopObj.diagType === 'month'?'月度':'自定义周期'}}诊断</span>
+        <span class="diag-type">{{shopObj.isPeriod?'自定义周期':'月度'}}诊断</span>
       </div>
     </div>
     <div class="diagnosis-type">
@@ -24,11 +24,10 @@
       <radio-group class="radio-group"
                    @change="radioChange">
         <label class="radio"
-               :class="{isGrey:shopObj.diagType!=='month'}">
+               :class="{isGrey:shopObj.isPeriod}">
           <div class="radio-rel">
-            <radio value="month"
-                   checked />
-            <span :class="{check:shopObj.diagType==='month'}"
+            <radio value='0' />
+            <span :class="{check:!shopObj.isPeriod}"
                   class="check-style"></span>
             <span>月度诊断</span>
           </div>
@@ -38,16 +37,16 @@
                     end="2019-09"
                     fields='month'
                     @change="dateChange">
-              <span style="color:#7f2f37">{{shopObj.diagMonthDate || diagDate}}</span>
+              <span style="color:#7f2f37">{{shopObj.startTime || diagDate}}</span>
               <span class="arrow"></span>
             </picker>
           </div>
         </label>
         <label class="radio"
-               :class="{isGrey:shopObj.diagType!=='free'}">
+               :class="{isGrey:!shopObj.isPeriod}">
           <div class="radio-rel">
-            <radio value="free" />
-            <span :class="{check:shopObj.diagType==='free'}"
+            <radio value="1" />
+            <span :class="{check:shopObj.isPeriod}"
                   class="check-style"></span>
             <span>自定义周期诊断</span>
           </div>
@@ -55,14 +54,15 @@
             <picker mode="multiSelector"
                     @change="multiChange"
                     :range="multiDate">
-              <span>{{shopObj.diagFreeDate.startDate || '起始年/月'}} - {{shopObj.diagFreeDate.endDate || '终止年/月'}}</span>
+              <span>{{shopObj.startTime || '起始年/月'}} - {{shopObj.endTime || '终止年/月'}}</span>
               <span class="arrow"></span>
             </picker>
           </div>
         </label>
       </radio-group>
     </div>
-    <SliderShop :shopObj='shopObj'></SliderShop>
+    <SliderShop :shopObj='shopObj'
+                :range='rangeParams'></SliderShop>
     <button class="go-submit"
             @click="goDiagnosis">提交诊断</button>
   </div>
@@ -80,22 +80,22 @@ export default {
     return {
       multiDate: [['2027/09', '2017/10', '2017/11', '2017/12', '2018/01', '2018/02', '2018/03', '2019/04'], ['2018/09', '2018/10', '2018/11', '2018/12', '2019/01', '2019/02', '2019/03', '2019/04']],
       shopObj: {
-        diagType: 'month',
-        diagMonthDate: '',
-        diagFreeDate: {
-          startDate: '',
-          endDate: '',
-        },
+        shopId: -1,
+        isPeriod: false,
+        startTime: '',
+        endTime: '',
+        periodCount: '1',
         name: '',
-        size: '',
-        rent: '',
-        people: '',
-        stock: 0,
-        sale: 0,
-        goldSale: 0,
-        goldStock: 0,
-        goldRate: 0
+        shopArea: '',
+        shopMonthlyRent: '',
+        clerkAmount: '',
+        averageInventoryId: 0,
+        monthlySalesId: 0,
+        goldSalesProportion: 0,
+        goldInventoryId: 0,
+        goldAverageGrossProfitRate: 0
       },
+      rangeParams: {},
       sourceType: 'newShop' // 判断是新建的还是补全的
     }
   },
@@ -107,24 +107,54 @@ export default {
       if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
         return wxUtils.showModal('起始日期不能大于终止日期', '请重新选择', { showCancel: false })
       }
-      this.shopObj.diagFreeDate.startDate = startDate
-      this.shopObj.diagFreeDate.endDate = endDate
+      this.shopObj.startTime = startDate
+      this.shopObj.endTime = endDate
+      let end = this.shopObj.endTime.split('/')
+      let start = this.shopObj.startTime.split('/')
+      this.shopObj.periodCount = (end[0] - start[0]) * 12 + (end[1] - start[1])
     },
     dateChange(e) {
-      this.shopObj.diagMonthDate = e.mp.detail.value.replace('-', '/')
+      this.shopObj.startTime = e.mp.detail.value.replace('-', '/')
     },
     async saveDiagnosis() {
-      await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name, brandName: this.brandObj.brand.name }).then(res => {
-        console.log(res);
-      })
+      // 创建新的店铺
+      let { data } = await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name || (this.brandObj.brand.name + '-' + this.brandObj.loc.name), brandName: this.brandObj.brand.name })
+      let shoplist = data.shopsList
+      // 得到新加入的shop获得id
+      this.shopObj.shopId = shoplist[shoplist.length - 1].id
+      // 组装数据加入诊断
+      let { data: data1 } = await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
+
+      this.shopObj = {
+        shopId: -1,
+        isPeriod: false,
+        startTime: '',
+        periodCount: '1',
+        endTime: '',
+        name: '',
+        shopArea: '',
+        shopMonthlyRent: '',
+        clerkAmount: '',
+        averageInventoryId: 0,
+        monthlySalesId: 0,
+        goldSalesProportion: 0,
+        goldInventoryId: 0,
+        goldAverageGrossProfitRate: 0
+      }
+      this.$store.state.brandObj = {
+        loc: {},
+        brand: {},
+        shopObj: {}
+      }
+      wx.switchTab({
+        url: '/pages/home/main'
+      });
     },
     async goDiagnosis() {
-      if (this.shopObj.diagType === 'month') {
-        this.shopObj.diagMonthDate = this.diagDate
-      }
+
       // 放到vuex中
       this.brandObj.shopObj = this.shopObj
-      if (this.shopObj.diagType === 'free' && !this.shopObj.diagFreeDate.startDate) {
+      if (this.shopObj.isPeriod && !this.shopObj.startTime) {
         return wxUtils.showModal('部分必要信息未填写', '自定义周期没有选择日期', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
           if (res === 'cancel') {
             await this.saveDiagnosis()
@@ -134,23 +164,29 @@ export default {
           }
         })
       }
-      for (const i in this.shopObj) {
-        if (!this.shopObj[i] && i !== '__newReference') {
-          return wxUtils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
-            // 点击取消跳转到主页
-            if (res === 'cancel') {
-              await this.saveDiagnosis()
-              wx.switchTab({
-                url: '/pages/home/main'
-              });
-            }
-          })
-        }
+      if (!this.shopObj.name || !this.shopObj.shopArea || !this.shopObj.shopMonthlyRent || !this.shopObj.clerkAmount) {
+        return wxUtils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
+          // 点击取消跳转到主页
+          if (res === 'cancel') {
+            await this.saveDiagnosis()
+            wx.switchTab({
+              url: '/pages/home/main'
+            });
+          }
+        })
       }
-
+      await this.saveDiagnosis()
     },
     radioChange(e) {
-      this.shopObj.diagType = e.mp.detail.value
+      this.shopObj.isPeriod = (e.mp.detail.value === '1')
+      // 如果是自定义周期，修改periodCount
+      if (this.shopObj.isPeriod && this.shopObj.startTime) {
+        let end = this.shopObj.endTime.split('/')
+        let start = this.shopObj.startTime.split('/')
+        this.shopObj.periodCount = (end[0] - start[0]) * 12 + (end[1] - start[1])
+      } else {
+        this.shopObj.periodCount = 1
+      }
     }
   },
   computed: {
@@ -161,30 +197,37 @@ export default {
       return year + '/' + (month < 10 ? '0' : '') + month
     }
   },
-  onLoad() {
+  async onShow() {
     if (this.$getRoute().shop) {
       this.shopObj = JSON.parse(this.$getRoute().shop)
       this.sourceType = 'patch'
     }
+    let { data } = await wxUtils.request(api.GetParams, this)
+    this.rangeParams = data
+
+    // TODO 需要额外加一条数据，paramRange为空
+    this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
+    this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
+    this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
+    this.shopObj.startTime = this.diagDate
   },
   onUnload() {
     if (this.sourceType === 'patch') {
       this.shopObj = {
-        diagType: 'month',
-        diagMonthDate: '',
-        diagFreeDate: {
-          startDate: '',
-          endDate: '',
-        },
+        shopId: -1,
+        isPeriod: false,
+        startTime: '',
+        periodCount: '1',
+        endTime: '',
         name: '',
-        size: '',
-        rent: '',
-        people: '',
-        stock: 0,
-        sale: 0,
-        goldSale: 0,
-        goldStock: 0,
-        goldRate: 0
+        shopArea: '',
+        shopMonthlyRent: '',
+        clerkAmount: '',
+        averageInventoryId: 0,
+        monthlySalesId: 0,
+        goldSalesProportion: 0,
+        goldInventoryId: 0,
+        goldAverageGrossProfitRate: 0
       }
     }
     this.sourceType = 'newShop'

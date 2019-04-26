@@ -7,7 +7,7 @@
           <span>店铺面积</span>
           <input type="number"
                  maxlength="5"
-                 v-model="shopObj.size"
+                 v-model="shopObj.shopArea"
                  placeholder="请输入店铺面积"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">平方米</span>
@@ -16,7 +16,7 @@
           <span>店铺租金</span>
           <input type="number"
                  maxlength="7"
-                 v-model="shopObj.rent"
+                 v-model="shopObj.shopMonthlyRent"
                  placeholder="请输入店铺租金"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">万元</span>
@@ -25,7 +25,7 @@
           <span>店员人数</span>
           <input type="number"
                  maxlength="3"
-                 v-model="shopObj.people"
+                 v-model="shopObj.clerkAmount"
                  placeholder="请输入店员人数"
                  placeholder-style='font-size:30rpx;color:#9C9C9D'>
           <span class="inside-unit">人</span>
@@ -36,16 +36,16 @@
           <div class="slider">
             <span>平均库存</span>
             <div>
-              <span>{{shopObj.stock}} - {{shopObj.stock + 5}}</span>
+              <span>{{range.averageInventoryRangeList[shopObj.averageInventoryId === 0 ? 0:(shopObj.averageInventoryId - range.averageInventoryRangeList[0].id)].paramRange}}</span>
               <span style="color:#7F2F37;padding-left:20rpx">件数</span>
             </div>
           </div>
-          <slider @changing="sliderChanging($event,'stock')"
-                  @change="sliderChanging($event,'stock')"
-                  v-model="shopObj.stock"
-                  min="0"
-                  max="120"
-                  step=5
+          <slider @changing="sliderChanging($event,'averageInventoryId')"
+                  @change="sliderChanging($event,'averageInventoryId')"
+                  v-model="shopObj.averageInventoryId"
+                  :min="range.averageInventoryRangeList[0].id"
+                  :max="range.averageInventoryRangeList[range.averageInventoryRangeList.length-1].id"
+                  step=1
                   activeColor='#eee'
                   block-size='16'
                   backgroundColor='#84373F'
@@ -55,16 +55,16 @@
           <div class="slider">
             <span>月销售额</span>
             <div>
-              <span>{{shopObj.sale}} - {{shopObj.sale + 10}}</span>
+              <span>{{range.salesRangeList[shopObj.monthlySalesId === 0 ? 0:(shopObj.monthlySalesId - range.salesRangeList[0].id)].paramRange}}</span>
               <span style="color:#7F2F37;padding-left:20rpx">万元</span>
             </div>
           </div>
-          <slider @changing="sliderChanging($event,'sale')"
-                  @change="sliderChanging($event,'sale')"
-                  v-model="shopObj.sale"
-                  min="0"
-                  max="290"
-                  step=10
+          <slider @changing="sliderChanging($event,'monthlySalesId')"
+                  @change="sliderChanging($event,'monthlySalesId')"
+                  v-model="shopObj.monthlySalesId"
+                  :min="range.salesRangeList[0].id"
+                  :max="range.salesRangeList[range.salesRangeList.length-1].id"
+                  step=1
                   activeColor='#eee'
                   block-size='16'
                   backgroundColor='#84373F'
@@ -76,13 +76,13 @@
           <div class="slider">
             <span>黄金销售占比</span>
             <div>
-              <span>{{shopObj.goldSale}}</span>
+              <span>{{shopObj.goldSalesProportion}}</span>
               <span style="color:#7F2F37;padding-left:20rpx">%</span>
             </div>
           </div>
-          <slider @changing="sliderChanging($event,'goldSale')"
-                  @change="sliderChanging($event,'goldSale')"
-                  v-model="shopObj.goldSale"
+          <slider @changing="sliderChanging($event,'goldSalesProportion')"
+                  @change="sliderChanging($event,'goldSalesProportion')"
+                  v-model="shopObj.goldSalesProportion"
                   min="0"
                   max="100"
                   step=1
@@ -95,16 +95,16 @@
           <div class="slider">
             <span>黄金库存数</span>
             <div>
-              <span>{{shopObj.goldStock}} - {{shopObj.goldStock + 500}}</span>
+              <span>{{range.goldInventoryRangeList[shopObj.goldInventoryId === 0 ? 0:(shopObj.goldInventoryId - range.goldInventoryRangeList[0].id)].paramRange}}</span>
               <span style="color:#7F2F37;padding-left:20rpx">克</span>
             </div>
           </div>
-          <slider @changing="sliderChanging($event,'goldStock')"
-                  @change="sliderChanging($event,'goldStock')"
-                  v-model="shopObj.goldStock"
-                  min="0"
-                  max="8000"
-                  step=500
+          <slider @changing="sliderChanging($event,'goldInventoryId')"
+                  @change="sliderChanging($event,'goldInventoryId')"
+                  v-model="shopObj.goldInventoryId"
+                  :min="range.goldInventoryRangeList[0].id"
+                  :max="range.goldInventoryRangeList[range.goldInventoryRangeList.length-1].id"
+                  step=1
                   activeColor='#eee'
                   block-size='16'
                   backgroundColor='#84373F'
@@ -114,13 +114,13 @@
           <div class="slider">
             <span>黄金平均毛利率</span>
             <div>
-              <span>{{shopObj.goldRate}}</span>
+              <span>{{shopObj.goldAverageGrossProfitRate}}</span>
               <span style="color:#7F2F37;padding-left:20rpx">%</span>
             </div>
           </div>
-          <slider @changing="sliderChanging($event,'goldRate')"
-                  @change="sliderChanging($event,'goldRate')"
-                  v-model="shopObj.goldRate"
+          <slider @changing="sliderChanging($event,'goldAverageGrossProfitRate')"
+                  @change="sliderChanging($event,'goldAverageGrossProfitRate')"
+                  v-model="shopObj.goldAverageGrossProfitRate"
                   min="0"
                   max="100"
                   step=1
@@ -135,7 +135,7 @@
 </template>
 <script>
 export default {
-  props: ['shopObj'],
+  props: ['shopObj', 'range'],
   methods: {
     sliderChanging(e, type) {
       this.shopObj[type] = e.mp.detail.value

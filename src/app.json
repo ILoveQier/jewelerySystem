@@ -1,12 +1,12 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/diagnosis/location/main",
     "pages/home/main",
     "pages/home/detail/main",
     "pages/home/detail/recordDetail/main",
     "pages/diagnosis/main",
     "pages/diagnosis/brand/main",
-    "pages/diagnosis/location/main",
     "pages/me/main",
     "pages/me/issue/main"
   ],
@@ -36,7 +36,7 @@
         "pagePath": "pages/diagnosis/location/main",
         "iconPath": "/static/tabs/create.png",
         "selectedIconPath": "/static/tabs/create.png",
-        "text": "新建诊断"
+        "text": "新建店铺"
       },
       {
         "pagePath": "pages/me/main",

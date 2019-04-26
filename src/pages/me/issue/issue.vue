@@ -20,7 +20,8 @@
   </div>
 </template>
 <script>
-import $utils from '@/utils/wxUtils'
+import api from '../../../../config/api.js'
+import wxUtils from '@/utils/wxUtils'
 export default {
   data() {
     return {
@@ -29,9 +30,17 @@ export default {
   },
   methods: {
     goReport() {
-      $utils.showModal('您的问题描述已提交',
-        '确认问题后会有专人与您联系,感谢您对我们的支持~',
-        { confirmColor: '#914C53', showCancel: false })
+      wxUtils.request(api.FeedBack, this, { description: this.issueObj.desc, mobile: this.issueObj.phone })
+        .then(_ => {
+          wxUtils.showModal('您的问题描述已提交',
+            '确认问题后会有专人与您联系,感谢您对我们的支持~',
+            { confirmColor: '#914C53', showCancel: false })
+            .then(_ => {
+              wx.navigateBack({
+                delta: 2
+              })
+            })
+        })
     }
   },
 }

@@ -68,6 +68,11 @@ export default {
   async onLoad(ops) {
     this.shop = JSON.parse(this.$getRoute().shop)
     this.shopName = this.shop.name
+
+    // TODO 没有数据，新建的应该至少有一条
+    let { data } = await wxUtils.request(api.DiagnoseList, this, { shopId: this.shop.id })
+    console.log(data);
+    
   }
 }
 </script> 

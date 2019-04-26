@@ -10,6 +10,7 @@
         <input type="text"
                v-model="brandName"
                @input='inputVal'
+               @confirm='confirmSelfVal'
                maxlength="10"
                placeholder-style='font-size:30rpx;color:#9C9C9D'
                placeholder="输入珠宝品牌名">
@@ -57,6 +58,14 @@ export default {
     ...mapState(["brandObj"])
   },
   methods: {
+    // TODO 增加一个品牌id
+    confirmSelfVal(e) {
+      let val = e.mp.detail.value
+      if (val.trim()) {
+
+      }
+      console.log(e);
+    },
     confirmVal(item) {
       this.brandName = item.name
       this.brandObj.brand = item

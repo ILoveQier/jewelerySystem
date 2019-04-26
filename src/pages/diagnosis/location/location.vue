@@ -34,7 +34,8 @@
         </div>
       </div>
     </div>
-    <MyMap @getCity='getCity'></MyMap>
+    <MyMap @getCity='getCity'
+           :cityList='cityList'></MyMap>
   </div>
 </template>
 <script>
@@ -49,12 +50,13 @@ export default {
   },
   data() {
     return {
-      loc: { id: -1, name: '' },
+      loc: { id: -1, name: '未知地点' },
       rotateIndex: 0,
       animationData: {},
       searchVal: '',
       valList: [],
-      list: []
+      list: [],
+      cityList: []
     }
   },
   computed: {
@@ -160,20 +162,25 @@ export default {
       })
     }
   },
-  async onLoad() {
+  async onShow() {
     this.animation = wx.createAnimation({
       duration: 800,
       timingFunction: "linear"
     })
-    await wxUtils.request(api.CityList, this).then(res => {
-      res.data.forEach(item => {
-        this.list.push({
-          id: item.id,
-          name: item.name
+    if (!this.brandObj.loc.id) {
+      this.list = []
+      await wxUtils.request(api.CityList, this).then(res => {
+        this.cityList = res.data
+        res.data.forEach(item => {
+          this.list.push({
+            id: item.id,
+            name: item.name
+          })
         })
       })
-    })
-    this.getGeo()
+      this.loc = { id: -1, name: '未知地点' }
+      this.getGeo()
+    }
   }
 }
 </script>

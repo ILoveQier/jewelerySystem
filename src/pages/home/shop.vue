@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import $util from '../../utils/wxUtils.js'
 import { mapState } from "vuex";
+import wxUtils from '../../utils/wxUtils.js';
 export default {
   props: ['shop', 'index'],
   data() {
@@ -77,14 +77,14 @@ export default {
     deleteItem(shopId, index) {
       let title = '店铺诊断记录删除不可恢复'
       let subtitle = '确定要删除吗'
-      $util.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' })
+      wxUtils.showModal(title, subtitle, { confirmText: '删除', cancelColor: '#A9A9A9', confirmColor: '#82343B' })
         .then(res => {
           res === 'confirm' ? this.$emit('goDel', shopId, index) : 0
           this.typeVal = 0
         })
     },
     goDetail() {
-      // TODO
+      // TODO 判断店铺的评级 S最大，剩下的都一个颜色 ， shop里面的字段需要和diagnosis一致
       // if (!this.shop.level) {
       //   wx.navigateTo({
       //     url: '/pages/diagnosis/main?shop=' + JSON.stringify(this.shop),
