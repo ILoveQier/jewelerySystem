@@ -9,7 +9,7 @@
                      scroll-with-animation
                      :scroll-into-view='cityListId'>
           <div class='city_list_box'>
-            <div v-for='city in citylist'
+            <div v-for='city in cityList'
                  :key='city'>
               <div class='city_first_letter'
                    :id='city.letter'>{{city.letter}}</div>
@@ -40,10 +40,10 @@ export default {
       letters: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
       cityListId: '',
       //下面是城市列表信息，这里只是模拟数据
-      citylist: [{ "letter": "A", "data": [{ "id": "7", "name": "安徽" },{ "id": "8", "name": "安阳" }] },
-      {        "letter": "B", "data": [{ "id": "v10", "name": "巴中" },
-        { "id": "v4", "name": "包头" },
-        { "id": "v1", "name": "北京" }]      }, { "letter": "C", "data": [{ "id": "v15", "name": "成都" }] }, { "letter": "D", "data": [{ "id": "v21", "name": "稻城" }] }, { "letter": "G", "data": [{ "id": "v17", "name": "广州" }, { "id": "v29", "name": "桂林" }] }, { "letter": "H", "data": [{ "id": "v9", "name": "海南" }, { "id": "v3", "name": "呼和浩特" }] }, { "letter": "L", "data": [{ "id": "v24", "name": "洛阳" }, { "id": "v20", "name": "拉萨" }, { "id": "v14", "name": "丽江" }] }, { "letter": "M", "data": [{ "id": "v13", "name": "眉山" }] }, { "letter": "N", "data": [{ "id": "v27", "name": "南京" }] }, { "letter": "S", "data": [{ "id": "v18", "name": "三亚" }, { "id": "v2", "name": "上海" }] }, { "letter": "T", "data": [{ "id": "v5", "name": "天津" }] }, { "letter": "W", "data": [{ "id": "v12", "name": "乌鲁木齐" }, { "id": "v25", "name": "武汉" }] }, { "letter": "X", "data": [{ "id": "v23", "name": "西安" }, { "id": "v28", "name": "香港" }, { "id": "v19", "name": "厦门" }] }, { "letter": "Z", "data": [{ "id": "v8", "name": "张家口" }] }],
+      // citylist: [{ "letter": "A", "data": [{ "id": "7", "name": "安徽" },{ "id": "8", "name": "安阳" }] },
+      // {        "letter": "B", "data": [{ "id": "v10", "name": "巴中" },
+      //   { "id": "v4", "name": "包头" },
+      //   { "id": "v1", "name": "北京" }]      }, { "letter": "C", "data": [{ "id": "v15", "name": "成都" }] }, { "letter": "D", "data": [{ "id": "v21", "name": "稻城" }] }, { "letter": "G", "data": [{ "id": "v17", "name": "广州" }, { "id": "v29", "name": "桂林" }] }, { "letter": "H", "data": [{ "id": "v9", "name": "海南" }, { "id": "v3", "name": "呼和浩特" }] }, { "letter": "L", "data": [{ "id": "v24", "name": "洛阳" }, { "id": "v20", "name": "拉萨" }, { "id": "v14", "name": "丽江" }] }, { "letter": "M", "data": [{ "id": "v13", "name": "眉山" }] }, { "letter": "N", "data": [{ "id": "v27", "name": "南京" }] }, { "letter": "S", "data": [{ "id": "v18", "name": "三亚" }, { "id": "v2", "name": "上海" }] }, { "letter": "T", "data": [{ "id": "v5", "name": "天津" }] }, { "letter": "W", "data": [{ "id": "v12", "name": "乌鲁木齐" }, { "id": "v25", "name": "武汉" }] }, { "letter": "X", "data": [{ "id": "v23", "name": "西安" }, { "id": "v28", "name": "香港" }, { "id": "v19", "name": "厦门" }] }, { "letter": "Z", "data": [{ "id": "v8", "name": "张家口" }] }],
     }
   },
   methods: {

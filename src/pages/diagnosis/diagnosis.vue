@@ -80,22 +80,6 @@ export default {
   data() {
     return {
       multiDate: [['2027/09', '2017/10', '2017/11', '2017/12', '2018/01', '2018/02', '2018/03', '2019/04'], ['2018/09', '2018/10', '2018/11', '2018/12', '2019/01', '2019/02', '2019/03', '2019/04']],
-      shopObj: {
-        shopId: -1,
-        isPeriod: false,
-        startTime: '',
-        endTime: '',
-        periodCount: '1',
-        name: '',
-        shopArea: '',
-        shopMonthlyRent: '',
-        clerkAmount: '',
-        averageInventoryId: 0,
-        monthlySalesId: 0,
-        goldSalesProportion: 0,
-        goldInventoryId: 0,
-        goldAverageGrossProfitRate: 0
-      },
       rangeParams: {
         averageInventoryRangeList: [],
         goldInventoryRangeList: [],
@@ -104,24 +88,6 @@ export default {
     }
   },
   methods: {
-    initData() {
-      this.shopObj = {
-        shopId: -1,
-        isPeriod: false,
-        startTime: '',
-        periodCount: '1',
-        endTime: '',
-        name: '',
-        shopArea: '',
-        shopMonthlyRent: '',
-        clerkAmount: '',
-        averageInventoryId: 0,
-        monthlySalesId: 0,
-        goldSalesProportion: 0,
-        goldInventoryId: 0,
-        goldAverageGrossProfitRate: 0
-      }
-    },
     multiChange(e) {
       const dateObj = e.mp.detail.value
       const startDate = this.multiDate[0][dateObj[0]]
@@ -144,7 +110,7 @@ export default {
       // 只有来源是新建店铺才新建 否则都加诊断或者修改诊断
       if (this.sourceType === 'newShop') {
         // 创建新的店铺
-        let { data } = await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name || (this.brandObj.brand.name + '-' + this.brandObj.loc.name), brandName: this.brandObj.brand.name })
+        let { data } = await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.shopObj.name || (this.brandObj.brand.name + '-' + this.brandObj.loc.name), brandName: this.brandObj.brand.name })
         let shoplist = data.shopsList
         // 得到新加入的shop获得id
         this.shopObj.shopId = shoplist[shoplist.length - 1].id
@@ -156,11 +122,10 @@ export default {
       // 组装数据加入诊断
       let { data: data1 } = await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
 
-      this.initData()
+      // this.initData()
       this.$store.state.brandObj = {
         loc: {},
         brand: {},
-        shopObj: {}
       }
       wx.switchTab({
         url: '/pages/home/main'
@@ -168,7 +133,6 @@ export default {
     },
     async goDiagnosis() {
       // 放到vuex中
-      this.brandObj.shopObj = this.shopObj
       if (this.shopObj.isPeriod && !this.shopObj.startTime) {
         return wxUtils.showModal('部分必要信息未填写', '自定义周期没有选择日期', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
           if (res === 'cancel') {
@@ -205,7 +169,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["brandObj", "sourceType"]),
+    ...mapState(["brandObj", "sourceType","shopObj"]),
     diagDate: () => {
       let year = new Date().getFullYear()
       let month = new Date().getMonth() + 1
@@ -213,15 +177,15 @@ export default {
     }
   },
   async onShow() {
-    if (this.sourceType !== 'newShop') {
-      this.initData()
-    }
+    // if (this.sourceType !== 'newShop') {
+    //   this.initData()
+    // }
     if (this.rangeParams.salesRangeList.length == 0) {
       let { data } = await wxUtils.request(api.GetParams, this)
       this.rangeParams = data
     }
     // TODO 如果是修改诊断
-    if (1 !== 1) {
+    if (false) {
 
     } else {
       // 如果是当前店铺新增诊断
@@ -231,6 +195,12 @@ export default {
         this.shopObj.shopId = shopId
         this.shopObj.name = name
       }
+      // 如果是当前店铺补全诊断
+      if (this.sourceType === 'finishShopDiag') {
+        const shop = JSON.parse(this.$getRoute().shop)
+        this.shopObj = shop
+      }
+
       if (!this.shopObj.startTime) {
         // TODO 需要额外加一条数据，paramRange为空
         this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
@@ -242,9 +212,9 @@ export default {
 
   },
   onUnload() {
-    if (this.sourceType !== 'newShop') {
-      this.initData()
-    }
+    // if (this.sourceType !== 'newShop') {
+    //   }
+      // this.initData()
   }
 }
 </script>

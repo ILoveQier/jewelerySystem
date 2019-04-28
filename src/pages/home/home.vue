@@ -34,6 +34,9 @@ export default {
   components: {
     Shop
   },
+  computed: mapState([
+    'shopObj'
+  ]),
   data() {
     return {
       shopsList: [],
@@ -51,8 +54,31 @@ export default {
           this.shopsList.splice(index, 1)
         })
     },
+    init() {
+      this.$store.state.brandObj = {
+        loc: {},
+        brand: {},
+      }
+      this.$store.state.shopObj = {
+        shopId: -1,
+        isPeriod: false,
+        startTime: '',
+        periodCount: '1',
+        endTime: '',
+        name: '',
+        shopArea: '',
+        shopMonthlyRent: '',
+        clerkAmount: '',
+        averageInventoryId: 0,
+        monthlySalesId: 0,
+        goldSalesProportion: 0,
+        goldInventoryId: 0,
+        goldAverageGrossProfitRate: 0
+      }
+    }
   },
   async onShow() {
+    this.init()
     let { data } = await wxUtils.request(api.ShopList, this)
     this.shopsList = data.shopsList
   }

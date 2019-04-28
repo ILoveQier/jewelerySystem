@@ -172,7 +172,7 @@ export default {
       this.list = []
       await wxUtils.request(api.CityList, this).then(res => {
         this.cityList = res.data
-        res.data.forEach(item => {
+        this.cityList.forEach(item => {
           this.list.push({
             id: item.id,
             name: item.name

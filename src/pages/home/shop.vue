@@ -17,9 +17,10 @@
     </div>
     <!-- 根据店铺的评级判断展示方式 -->
     <div class="shop-level"
-         v-if="shop.level">
-      <span>{{shop.level}}</span>
-      <span :class="{isA:shop.level==='A',isB:shop.level==='B'}">级</span>
+         :class="{isS:rank==='S'}"
+         v-if="rank">
+      <span>{{rank}}</span>
+      <span>级</span>
     </div>
     <div class="go-patch"
          v-else>
@@ -43,9 +44,12 @@ export default {
   data() {
     return {
       typeVal: 0, // 用于判断滑动后赋予的值
+      rank: ''
     }
   },
   computed: mapState([
+    'brandObj',
+    'sourceType',
     'currentIndex'
   ]),
   watch: {
@@ -53,6 +57,10 @@ export default {
     currentIndex: function (newVal, oldVal) {
       newVal === this.index ? 1 : (this.typeVal = 0)
     }
+  },
+  onLoad() {
+    let rank = this.shop.shopRank
+    this.rank = rank ? rank.toUpperCase() : rank
   },
   methods: {
     touchStart(e) {
@@ -84,13 +92,16 @@ export default {
         })
     },
     goDetail() {
-      // TODO 需要给brandObj重新赋值
       // TODO 判断店铺的评级 S最大，剩下的都一个颜色 ， shop里面的字段需要和diagnosis一致
-      // if (!this.shop.level) {
-      //   wx.navigateTo({
-      //     url: '/pages/diagnosis/main?shop=' + JSON.stringify(this.shop),
-      //   });
-      // }
+      if (!this.shop.shopRank) {
+        this.brandObj.loc = this.shop.wxCity
+        this.brandObj.brand = this.shop.wxJewelryBrand
+        this.$store.state.sourceType = 'finishShopDiag'
+        wx.navigateTo({
+          url: '/pages/diagnosis/main?shop=' + JSON.stringify(this.shop),
+        });
+        // return 
+      }
       wx.navigateTo({
         url: '/pages/home/detail/main?shop=' + JSON.stringify(this.shop),
       });
@@ -137,21 +148,18 @@ export default {
     width: 15%;
     padding-top: 40rpx;
     padding-left: 55rpx;
+    color: #cbb180;
+    &.isS {
+      color: #98585e !important;
+    }
     span {
       &:nth-child(1) {
-        color: #333333;
         font-size: 74rpx;
         font-style: italic;
         font-weight: bold;
         margin-right: 10rpx;
       }
       font-size: 30rpx;
-      &.isA {
-        color: #98585e;
-      }
-      &.isB {
-        color: #cbb180;
-      }
     }
   }
   .go-patch {
