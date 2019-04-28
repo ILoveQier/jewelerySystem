@@ -12,6 +12,8 @@
 	"compileType": "miniprogram",
 	"appid": "wx7fec29754ee12072",
 	"projectname": "jewelry-local",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,

@@ -62,6 +62,7 @@
       </radio-group>
     </div>
     <SliderShop :shopObj='shopObj'
+                v-if="rangeParams.salesRangeList.length > 0"
                 :range='rangeParams'></SliderShop>
     <button class="go-submit"
             @click="goDiagnosis">提交诊断</button>
@@ -95,11 +96,32 @@ export default {
         goldInventoryId: 0,
         goldAverageGrossProfitRate: 0
       },
-      rangeParams: {},
-      sourceType: 'newShop' // 判断是新建的还是补全的
+      rangeParams: {
+        averageInventoryRangeList: [],
+        goldInventoryRangeList: [],
+        salesRangeList: []
+      },
     }
   },
   methods: {
+    initData() {
+      this.shopObj = {
+        shopId: -1,
+        isPeriod: false,
+        startTime: '',
+        periodCount: '1',
+        endTime: '',
+        name: '',
+        shopArea: '',
+        shopMonthlyRent: '',
+        clerkAmount: '',
+        averageInventoryId: 0,
+        monthlySalesId: 0,
+        goldSalesProportion: 0,
+        goldInventoryId: 0,
+        goldAverageGrossProfitRate: 0
+      }
+    },
     multiChange(e) {
       const dateObj = e.mp.detail.value
       const startDate = this.multiDate[0][dateObj[0]]
@@ -117,30 +139,24 @@ export default {
       this.shopObj.startTime = e.mp.detail.value.replace('-', '/')
     },
     async saveDiagnosis() {
-      // 创建新的店铺
-      let { data } = await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name || (this.brandObj.brand.name + '-' + this.brandObj.loc.name), brandName: this.brandObj.brand.name })
-      let shoplist = data.shopsList
-      // 得到新加入的shop获得id
-      this.shopObj.shopId = shoplist[shoplist.length - 1].id
+      this.shopObj.startTime = this.shopObj.startTime.replace('/', '')
+      this.shopObj.endTime = this.shopObj.endTime.replace('/', '')
+      // 只有来源是新建店铺才新建 否则都加诊断或者修改诊断
+      if (this.sourceType === 'newShop') {
+        // 创建新的店铺
+        let { data } = await wxUtils.request(api.ShopAdd, this, { cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.brandObj.shopObj.name || (this.brandObj.brand.name + '-' + this.brandObj.loc.name), brandName: this.brandObj.brand.name })
+        let shoplist = data.shopsList
+        // 得到新加入的shop获得id
+        this.shopObj.shopId = shoplist[shoplist.length - 1].id
+      } else if (this.sourceType === 'patch') {
+        // 如果是修改诊断，则执行更新操作
+
+        return
+      }
       // 组装数据加入诊断
       let { data: data1 } = await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
 
-      this.shopObj = {
-        shopId: -1,
-        isPeriod: false,
-        startTime: '',
-        periodCount: '1',
-        endTime: '',
-        name: '',
-        shopArea: '',
-        shopMonthlyRent: '',
-        clerkAmount: '',
-        averageInventoryId: 0,
-        monthlySalesId: 0,
-        goldSalesProportion: 0,
-        goldInventoryId: 0,
-        goldAverageGrossProfitRate: 0
-      }
+      this.initData()
       this.$store.state.brandObj = {
         loc: {},
         brand: {},
@@ -151,7 +167,6 @@ export default {
       });
     },
     async goDiagnosis() {
-
       // 放到vuex中
       this.brandObj.shopObj = this.shopObj
       if (this.shopObj.isPeriod && !this.shopObj.startTime) {
@@ -190,47 +205,46 @@ export default {
     }
   },
   computed: {
-    ...mapState(["brandObj"]),
+    ...mapState(["brandObj", "sourceType"]),
     diagDate: () => {
       let year = new Date().getFullYear()
-      let month = new Date().getMonth()
+      let month = new Date().getMonth() + 1
       return year + '/' + (month < 10 ? '0' : '') + month
     }
   },
   async onShow() {
-    if (this.$getRoute().shop) {
-      this.shopObj = JSON.parse(this.$getRoute().shop)
-      this.sourceType = 'patch'
+    if (this.sourceType !== 'newShop') {
+      this.initData()
     }
-    let { data } = await wxUtils.request(api.GetParams, this)
-    this.rangeParams = data
+    if (this.rangeParams.salesRangeList.length == 0) {
+      let { data } = await wxUtils.request(api.GetParams, this)
+      this.rangeParams = data
+    }
+    // TODO 如果是修改诊断
+    if (1 !== 1) {
 
-    // TODO 需要额外加一条数据，paramRange为空
-    this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
-    this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
-    this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
-    this.shopObj.startTime = this.diagDate
-  },
-  onUnload() {
-    if (this.sourceType === 'patch') {
-      this.shopObj = {
-        shopId: -1,
-        isPeriod: false,
-        startTime: '',
-        periodCount: '1',
-        endTime: '',
-        name: '',
-        shopArea: '',
-        shopMonthlyRent: '',
-        clerkAmount: '',
-        averageInventoryId: 0,
-        monthlySalesId: 0,
-        goldSalesProportion: 0,
-        goldInventoryId: 0,
-        goldAverageGrossProfitRate: 0
+    } else {
+      // 如果是当前店铺新增诊断
+      if (this.sourceType === 'newShopDiag') {
+        const shopId = this.$getRoute().shopId
+        const name = this.$getRoute().name
+        this.shopObj.shopId = shopId
+        this.shopObj.name = name
+      }
+      if (!this.shopObj.startTime) {
+        // TODO 需要额外加一条数据，paramRange为空
+        this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
+        this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
+        this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
+        this.shopObj.startTime = this.diagDate
       }
     }
-    this.sourceType = 'newShop'
+
+  },
+  onUnload() {
+    if (this.sourceType !== 'newShop') {
+      this.initData()
+    }
   }
 }
 </script>

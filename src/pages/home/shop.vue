@@ -84,6 +84,7 @@ export default {
         })
     },
     goDetail() {
+      // TODO 需要给brandObj重新赋值
       // TODO 判断店铺的评级 S最大，剩下的都一个颜色 ， shop里面的字段需要和diagnosis一致
       // if (!this.shop.level) {
       //   wx.navigateTo({
@@ -101,7 +102,7 @@ export default {
 <style lang="less" scoped>
 .shop-container {
   height: 140rpx;
-  width: 1120rpx;
+  width: 150%;
   border-bottom: 2rpx solid #eee;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;

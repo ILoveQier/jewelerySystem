@@ -18,5 +18,7 @@ module.exports = {
   GetParams: API_BASE_URL +'inputParams/getInputPaaramsRange',//获取平均库存参数
   DiagnoseList: API_BASE_URL + 'diagnose/index',//获取店铺诊断列表
   DiagnoseAdd: API_BASE_URL + 'diagnose/add',//新增店铺诊断
+  DiagnoseDelete: API_BASE_URL + 'diagnose/delete',//删除店铺诊断
+
   FeedBack: API_BASE_URL + 'feedback/messages' // 问题反馈
 };

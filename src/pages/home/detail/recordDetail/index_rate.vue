@@ -32,25 +32,12 @@
            alt="">
       <span>分享</span>
     </div>
-    <footer>
-      <div class="footer-item">
-        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/sett.png"
-             alt="">
-        <span>修改诊断数据</span>
-      </div>
-      <div class="footer-item">
-        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/del.png"
-             alt="">
-        <span>删除本期诊断</span>
-      </div>
-    </footer>
   </div>
 </template>
 <script scoped>
-import $utils from '../../../../utils/wxUtils'
+import wxUtils from '../../../../utils/wxUtils'
 import echarts from 'echarts'
 import mpvueEcharts from 'mpvue-echarts'
-
 let chart = null;
 export default {
   components: {
@@ -60,7 +47,6 @@ export default {
     return {
       echarts,
       onInit: this.initChart,
-
       indexObj: {}
     }
   },
@@ -186,7 +172,7 @@ export default {
         })
       }
     }
-    await $utils.sleep(300)
+    await wxUtils.sleep(500)
     // 确保只有一个数据的显示
     this.draw(data)
   }
@@ -286,30 +272,6 @@ export default {
     span {
       color: #c1a46c;
       font-size: 28rpx;
-    }
-  }
-  footer {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    .footer-item {
-      width: 50%;
-      border: 2rpx solid #eee;
-      box-sizing: border-box;
-      height: 100rpx;
-      line-height: 100rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      img {
-        width: 40rpx;
-        height: 40rpx;
-        margin-right: 10rpx;
-      }
-      span {
-        color: #7f2f37;
-        font-size: 34rpx;
-      }
     }
   }
 }

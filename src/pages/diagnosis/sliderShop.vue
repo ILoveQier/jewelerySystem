@@ -1,5 +1,5 @@
 <template>
-  <div class="shop-inside-container">
+  <div class="shop-inside-container" v-if="shopObj.averageInventoryId">
     <div class="shop-inside">
       <span class="title">填写店铺详情</span>
       <div class="inside-info">
@@ -141,6 +141,9 @@ export default {
       this.shopObj[type] = e.mp.detail.value
     },
   },
+  onLoad() {
+    // console.log(this.shopObj);
+  }
 }
 </script>
 <style lang="less">

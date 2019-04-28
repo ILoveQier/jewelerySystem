@@ -12,6 +12,20 @@
     </div>
     <ReturnRate></ReturnRate>
     <IndexRate @clickItem='clickItem'></IndexRate>
+    <!-- 更新删除 -->
+    <footer>
+      <div class="footer-item">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/sett.png"
+             alt="">
+        <span @click="updateDiag">修改诊断数据</span>
+      </div>
+      <div class="footer-item">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/del.png"
+             alt="">
+        <span @click="deleteDiag">删除本期诊断</span>
+      </div>
+    </footer>
+    <!-- 弹窗 -->
     <div class="dialog"
          catchtouchmove
          :class="{show:flag}">
@@ -50,7 +64,10 @@
 <script>
 import IndexRate from './index_rate'
 import ReturnRate from './return_rate'
-import $utils from '../../../../utils/wxUtils.js'
+import wxUtils from '../../../../utils/wxUtils.js'
+import api from '../../../../../config/api.js'
+import { mapState } from "vuex";
+
 export default {
   components: {
     ReturnRate,
@@ -61,10 +78,12 @@ export default {
       flag: false,
       showPro: false,
       item: {},
-      scrollTop:0
+      diagItemInfo: {},
+      scrollTop: 0
     }
   },
   computed: {
+    ...mapState(["sourceType"]),
     acColor() {
       let color = '#BF99C1,'
       let ac = this.item[1]
@@ -86,8 +105,31 @@ export default {
     }
   },
   methods: {
+    updateDiag() {
+      this.$store.state.sourceType = 'patch'
+    },
+    deleteDiag() {
+      wxUtils.showModal('提示', '确认删除本条诊断吗？', { confirmColor: '#82343B' }).then(async r => {
+        if (r === 'confirm') {
+          let { res } = await wxUtils.request(api.DiagnoseDelete, this, { shopId: this.diagItemInfo.shopId, diagnoseId: this.diagItemInfo.id })
+          if (res.errno === 0) {
+            wx.showToast({
+              title: '删除成功',
+              duration: 1500,
+              mask: true,
+              success: async _ => {
+                await wxUtils.sleep(1000)
+                wx.navigateBack({
+                  delta: 1
+                })
+              }
+            });
+          }
+        }
+      })
+    },
     clickItem(item) {
-      if (this.scrollTop<200) {
+      if (this.scrollTop < 200) {
         return
       }
       this.showPro = false
@@ -95,9 +137,12 @@ export default {
       this.flag = true
     },
   },
+  onLoad() {
+    this.diagItemInfo = JSON.parse(this.$getRoute().diagItemInfo)
+  },
   onPageScroll: function (e) {
-    this.scrollTop =e.scrollTop
-    if ( this.scrollTop < 200) {
+    this.scrollTop = e.scrollTop
+    if (this.scrollTop < 200) {
       this.flag = false
     }
   }
@@ -147,6 +192,30 @@ export default {
             margin-bottom: 50rpx;
           }
         }
+      }
+    }
+  }
+  footer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    .footer-item {
+      width: 50%;
+      border: 2rpx solid #eee;
+      box-sizing: border-box;
+      height: 100rpx;
+      line-height: 100rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 40rpx;
+        height: 40rpx;
+        margin-right: 10rpx;
+      }
+      span {
+        color: #7f2f37;
+        font-size: 34rpx;
       }
     }
   }

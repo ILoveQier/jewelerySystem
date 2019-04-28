@@ -29,9 +29,13 @@
              alt="">
       </div>
     </div>
-    <DetailEchart></DetailEchart>
-    <Record></Record>
-    <button hover-class="go-tap">添加诊断</button>
+    <DetailEchart :data1='shopInfo.chart.date'
+                  :data2='shopInfo.chart.score'
+                  v-if="shopInfo.chart"></DetailEchart>
+    <Record :diagInfo='shopInfo'
+            v-if="shopInfo.notPeriodList || shopInfo.periodList"></Record>
+    <button hover-class="go-tap"
+            @click="goDiag">添加诊断</button>
   </div>
 </template>
 <script>
@@ -39,19 +43,34 @@ import Record from './detail_record'
 import DetailEchart from './detail_echart'
 import wxUtils from '../../../utils/wxUtils';
 import api from '../../../../config/api.js'
+import { mapState } from "vuex";
 
 export default {
   components: {
     DetailEchart,
     Record
   },
+  computed: {
+    ...mapState(["brandObj", "sourceType"]),
+  },
   data() {
     return {
       shopName: '',
-      flag: false
+      flag: false,
+      shopInfo: {}
     }
   },
   methods: {
+    // 添加诊断
+    goDiag() {
+      this.$store.state.sourceType = 'newShopDiag'
+      //修改brandObj
+      this.brandObj.loc = this.shop.wxCity
+      this.brandObj.brand = this.shop.wxJewelryBrand
+      wx.navigateTo({
+        url: '/pages/diagnosis/main?shopId=' + this.shop.id + '&name=' + this.shop.name,
+      });
+    },
     async goEdit() {
       await wxUtils.request(api.ShopUpdate, this, { cityId: this.shop.city_id, brandId: this.shop.brand_id, shopName: this.shopName, shopId: this.shop.id })
         .then(res => {
@@ -65,14 +84,14 @@ export default {
     }
   },
   props: ['shop'],
-  async onLoad(ops) {
+  async onShow() {
     this.shop = JSON.parse(this.$getRoute().shop)
     this.shopName = this.shop.name
-
-    // TODO 没有数据，新建的应该至少有一条
     let { data } = await wxUtils.request(api.DiagnoseList, this, { shopId: this.shop.id })
-    console.log(data);
-    
+    this.shopInfo = data
+  },
+  onUnload() {
+    this.shopInfo = {}
   }
 }
 </script> 

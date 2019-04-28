@@ -64,7 +64,6 @@ export default {
       if (val.trim()) {
 
       }
-      console.log(e);
     },
     confirmVal(item) {
       this.brandName = item.name

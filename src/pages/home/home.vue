@@ -60,6 +60,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-container {
+  width: 100vw;
   display: flex;
   flex-direction: column;
   .top-bgc {

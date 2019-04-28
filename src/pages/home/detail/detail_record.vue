@@ -9,12 +9,13 @@
     <div class="rows-wrap">
       <div :class="{grey:i%2===0}"
            class="row-wrap"
-           v-for="i in 5"
+           v-for="(item,i) in diagList"
            :key='i'>
         <i-row i-class='record-row'
-               @click="goRecordDetail">
-          <i-col span="6">19/03</i-col>
-          <i-col span="6">月度诊断</i-col>
+               @click="goRecordDetail(item)">
+          <i-col span="6">{{item.analysisStartTime}}</i-col>
+          <i-col span="6">{{item.isPeriod ? '自定义诊断':'月度诊断'}}</i-col>
+          <!-- // TODO 库存周转率需要获取 -->
           <i-col span="6">83%</i-col>
           <i-col span="6"><span :class="{red:'A'==='A'}">A级</span></i-col>
         </i-row>
@@ -24,13 +25,30 @@
 </template>
 <script>
 export default {
+  props: ['diagInfo'],
+  data() {
+    return {
+      diagList: [],
+    }
+  },
   methods: {
-    goRecordDetail() {
+    goRecordDetail(item) {
       wx.navigateTo({
-        url: '/pages/home/detail/recordDetail/main',
+        url: '/pages/home/detail/recordDetail/main?diagItemInfo=' + JSON.stringify(item),
       });
     }
   },
+  watch: {
+    diagInfo: function (newVal, oldVal) {
+      this.diagList = this.diagInfo.notPeriodList.concat(this.diagInfo.periodList)
+    }
+  },
+  onLoad() {
+    this.diagList = this.diagInfo.notPeriodList.concat(this.diagInfo.periodList)
+  },
+  onUnload() {
+    this.diagList = []
+  }
 }
 </script>
 <style lang="less">

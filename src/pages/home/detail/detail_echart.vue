@@ -14,12 +14,13 @@ export default {
   components: {
     mpvueEcharts,
   },
+  props:['data1','data2'],
   data() {
     return {
       echarts,
       onInit: this.initChart,
-      data1: ['2019/04', '2019/05', '2019/06', '2019/07', '2019/08', '2019/09', ''],
-      data2: [28, 22, 13, 25, 18, 12],
+      // data1: ['2019/04', '2019/05', '2019/06', '2019/07', '2019/08', '2019/09', ''],
+      // data2: [28, 22, 13, 25, 18, 12],
       // data1: ['2019/04'],
       // data2: [23]
     }
@@ -42,7 +43,7 @@ export default {
             fontSize: 12,
             color: '#000'
           },
-          data: ['库存回报率'],
+          data: ['库存周转率'],
         },
         dataZoom: [
           { //Y轴固定,让内容滚动
@@ -87,7 +88,7 @@ export default {
         },
         series: [
           {
-            name: '库存回报率',
+            name: '库存周转率',
             type: 'line',
             symbol: 'circle',
             symbolSize: 6,
@@ -108,7 +109,6 @@ export default {
     },
   },
   async onLoad(ops) {
-
     let isDisable = this.data1.length === 1
     if (this.data1.length < 5) {
       //  不支持forof

@@ -60,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["brandObj"])
+    ...mapState(["brandObj",'sourceType'])
   },
   methods: {
     goNextPage() {
@@ -163,6 +163,7 @@ export default {
     }
   },
   async onShow() {
+    this.$store.state.sourceType = 'newShop'
     this.animation = wx.createAnimation({
       duration: 800,
       timingFunction: "linear"
