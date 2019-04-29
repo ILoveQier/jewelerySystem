@@ -114,14 +114,16 @@ export default {
         let shoplist = data.shopsList
         // 得到新加入的shop获得id
         this.shopObj.shopId = shoplist[shoplist.length - 1].id
-      } else if (this.sourceType === 'patch') {
-        // 如果是修改诊断，则执行更新操作
-
-        return
+        // 组装数据加入诊断
+        await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
+      } else if (this.sourceType === 'newShopDiag') {
+        // 如果是当前店铺仙剑诊断，则执行插入操作
+        await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
+      } else {
+        // 如果是当前店铺补全诊断 或者 当前店铺修改诊断
+        await wxUtils.request(api.ShopUpdate, this, { shopId: this.shopObj.shopId, cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.shopObj.name, })
+        await wxUtils.request(api.DiagnoseUpdate, this, { ...this.shopObj })
       }
-      // 组装数据加入诊断
-      let { data: data1 } = await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
-
       // this.initData()
       this.$store.state.brandObj = {
         loc: {},
@@ -169,7 +171,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["brandObj", "sourceType","shopObj"]),
+    ...mapState(["brandObj", "sourceType", "shopObj"]),
     diagDate: () => {
       let year = new Date().getFullYear()
       let month = new Date().getMonth() + 1
@@ -197,12 +199,30 @@ export default {
       }
       // 如果是当前店铺补全诊断
       if (this.sourceType === 'finishShopDiag') {
-        const shop = JSON.parse(this.$getRoute().shop)
-        this.shopObj = shop
+        const diagnoseId = this.$getRoute().diagnoseId
+        const shopId = this.$getRoute().shopId
+        const name = this.$getRoute().name
+        let { data } = await wxUtils.request(api.DiagnoseGetById, this, { shopId, diagnoseId })
+        this.$store.state.shopObj = {
+          shopId: data.shopId,
+          isPeriod: data.isPeriod ? true : false,
+          startTime: data.analysisStartTime,
+          endTime: data.analysisEndTime,
+          periodCount: data.periodCount,
+          name,
+          shopArea: data.shopArea,
+          shopMonthlyRent: data.shopMonthlyRent,
+          clerkAmount: data.clerkAmount,
+          averageInventoryId: data.rawAverageInventory,
+          monthlySalesId: data.rawMonthlySales,
+          goldSalesProportion: data.goldSalesProportion,
+          goldInventoryId: data.rawGoldInventory,
+          goldAverageGrossProfitRate: data.goldAverageGrossProfitRate,
+          diagnoseId
+        }
       }
 
       if (!this.shopObj.startTime) {
-        // TODO 需要额外加一条数据，paramRange为空
         this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
         this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
         this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
@@ -214,7 +234,7 @@ export default {
   onUnload() {
     // if (this.sourceType !== 'newShop') {
     //   }
-      // this.initData()
+    // this.initData()
   }
 }
 </script>

@@ -45,13 +45,14 @@ export default {
   methods: {
     goDel(shopId, index) {
       wxUtils.request(api.ShopDelete, this, { shopIds: shopId })
-        .then(res => {
+        .then(async res => {
           wx.showToast({
             title: '删除成功',
             duration: 1500,
             mask: false,
           });
-          this.shopsList.splice(index, 1)
+          let { data } = await wxUtils.request(api.ShopList, this)
+          this.shopsList = data.shopsList
         })
     },
     init() {

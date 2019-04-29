@@ -60,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["brandObj",'sourceType'])
+    ...mapState(["brandObj", 'sourceType'])
   },
   methods: {
     goNextPage() {
@@ -87,7 +87,6 @@ export default {
           this.valList.push(item)
         }
       })
-      // const list = ['北京', '天津', '北海', '黑北', '河南', '河北', '新疆', '海南', '廊坊', '上海']
     },
     refreshList: function () {
       //连续动画需要添加定时器,所传参数每次+1就行
@@ -173,9 +172,11 @@ export default {
       await wxUtils.request(api.CityList, this).then(res => {
         this.cityList = res.data
         this.cityList.forEach(item => {
-          this.list.push({
-            id: item.id,
-            name: item.name
+          item.data.forEach(e => {
+            this.list.push({
+              id: e.id,
+              name: e.name
+            })
           })
         })
       })

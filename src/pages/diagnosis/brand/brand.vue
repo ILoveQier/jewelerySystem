@@ -58,11 +58,22 @@ export default {
     ...mapState(["brandObj"])
   },
   methods: {
-    // TODO 增加一个品牌id
+    // 如果是自定义品牌
     confirmSelfVal(e) {
+      this.brandObj.brand = {}
       let val = e.mp.detail.value
       if (val.trim()) {
-
+        this.brandObj.brand.name = val
+        this.brandHotList.forEach(item => {
+          let name = item.name
+          if (name.trim() === val) {
+            this.brandObj.brand = item
+          }
+        })
+        this.brandName = ''
+        wx.navigateTo({
+          url: '/pages/diagnosis/main',
+        });
       }
     },
     confirmVal(item) {
@@ -74,7 +85,6 @@ export default {
       });
     },
     inputVal(e) {
-      // const list = ['周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
       let val = e.mp.detail.value
       this.valList = []
       this.brandHotList.forEach(item => {
@@ -95,7 +105,6 @@ export default {
         })
       })
     }
-    // this.brandHotList = ['王超', '纪丽丽', '天使', '周润发', '周大生', '卡地亚', '周大福', '迪奥', '宝格丽', '萧邦', '伯爵', '蒂芙尼', '梵克雅宝', '宝诗龙', '尚美巴黎', '纪梵希']
   }
 }
 </script>
@@ -187,7 +196,7 @@ export default {
         margin-bottom: 20rpx;
         font-size: 28rpx;
         &.red {
-          background-color: #7F2F37;
+          background-color: #7f2f37;
           color: #fff;
         }
       }

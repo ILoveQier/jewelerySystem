@@ -56,7 +56,12 @@ export default {
     // 滑动一个 其他的组件还原  
     currentIndex: function (newVal, oldVal) {
       newVal === this.index ? 1 : (this.typeVal = 0)
+    },
+    shop: function () {
+      let rank = this.shop.shopRank
+      this.rank = rank ? rank.toUpperCase() : rank
     }
+
   },
   onLoad() {
     let rank = this.shop.shopRank
@@ -98,7 +103,7 @@ export default {
         this.brandObj.brand = this.shop.wxJewelryBrand
         this.$store.state.sourceType = 'finishShopDiag'
         wx.navigateTo({
-          url: '/pages/diagnosis/main?shop=' + JSON.stringify(this.shop),
+          url: '/pages/diagnosis/main?diagnoseId=' + this.shop.lackInfo + '&shopId=' + this.shop.id + '&name=' + this.shop.name,
         });
         // return 
       }

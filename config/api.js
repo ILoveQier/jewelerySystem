@@ -20,5 +20,6 @@ module.exports = {
   DiagnoseAdd: API_BASE_URL + 'diagnose/add',//新增店铺诊断
   DiagnoseGetById: API_BASE_URL + 'diagnose/get',//查询单独店铺诊断
   DiagnoseDelete: API_BASE_URL + 'diagnose/delete',//删除店铺诊断
+  DiagnoseUpdate: API_BASE_URL + 'diagnose/update',//更新店铺诊断
   FeedBack: API_BASE_URL + 'feedback/messages' // 问题反馈
 };
