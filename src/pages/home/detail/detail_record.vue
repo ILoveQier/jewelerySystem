@@ -16,7 +16,7 @@
           <i-col span="6">{{item.analysisStartTime}}</i-col>
           <i-col span="6">{{item.isPeriod ? '自定义诊断':'月度诊断'}}</i-col>
           <!-- // TODO 库存周转率需要获取 -->
-          <i-col span="6">83%</i-col>
+          <i-col i-class='text-col' span="6">{{item.storegeReturnProportion}}%</i-col>
           <i-col span="6"><span :class="{red:'A'==='A'}">A级</span></i-col>
         </i-row>
       </div>
@@ -78,6 +78,10 @@ export default {
         line-height: 60rpx;
         color: #43506b;
         font-size: 30rpx;
+        .text-col {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
         .red {
           color: #a46b71;
         }
