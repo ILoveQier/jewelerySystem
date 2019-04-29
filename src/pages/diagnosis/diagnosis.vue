@@ -88,6 +88,25 @@ export default {
     }
   },
   methods: {
+    copyToShopObj(data, name, diagnoseId) {
+      this.$store.state.shopObj = {
+        shopId: data.shopId,
+        isPeriod: data.isPeriod ? true : false,
+        startTime: data.analysisStartTime,
+        endTime: data.analysisEndTime,
+        periodCount: data.periodCount,
+        name,
+        shopArea: data.shopArea,
+        shopMonthlyRent: data.shopMonthlyRent,
+        clerkAmount: data.clerkAmount,
+        averageInventoryId: data.rawAverageInventory,
+        monthlySalesId: data.rawMonthlySales,
+        goldSalesProportion: data.goldSalesProportion,
+        goldInventoryId: data.rawGoldInventory,
+        goldAverageGrossProfitRate: data.goldAverageGrossProfitRate,
+        diagnoseId
+      }
+    },
     multiChange(e) {
       const dateObj = e.mp.detail.value
       const startDate = this.multiDate[0][dateObj[0]]
@@ -106,7 +125,9 @@ export default {
     },
     async saveDiagnosis() {
       this.shopObj.startTime = this.shopObj.startTime.replace('/', '')
-      this.shopObj.endTime = this.shopObj.endTime.replace('/', '')
+      if (this.shopObj.endTime) {
+        this.shopObj.endTime = this.shopObj.endTime.replace('/', '')
+      }
       // 只有来源是新建店铺才新建 否则都加诊断或者修改诊断
       if (this.sourceType === 'newShop') {
         // 创建新的店铺
@@ -117,14 +138,14 @@ export default {
         // 组装数据加入诊断
         await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
       } else if (this.sourceType === 'newShopDiag') {
-        // 如果是当前店铺仙剑诊断，则执行插入操作
+        // 如果是当前店铺新建诊断，则执行插入操作
+        await wxUtils.request(api.ShopUpdate, this, { shopId: this.shopObj.shopId, cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.shopObj.name, })
         await wxUtils.request(api.DiagnoseAdd, this, this.shopObj)
       } else {
         // 如果是当前店铺补全诊断 或者 当前店铺修改诊断
         await wxUtils.request(api.ShopUpdate, this, { shopId: this.shopObj.shopId, cityId: this.brandObj.loc.id, brandId: this.brandObj.brand.id, shopName: this.shopObj.name, })
         await wxUtils.request(api.DiagnoseUpdate, this, { ...this.shopObj })
       }
-      // this.initData()
       this.$store.state.brandObj = {
         loc: {},
         brand: {},
@@ -135,15 +156,8 @@ export default {
     },
     async goDiagnosis() {
       // 放到vuex中
-      if (this.shopObj.isPeriod && !this.shopObj.startTime) {
-        return wxUtils.showModal('部分必要信息未填写', '自定义周期没有选择日期', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
-          if (res === 'cancel') {
-            await this.saveDiagnosis()
-            wx.switchTab({
-              url: '/pages/home/main'
-            });
-          }
-        })
+      if (this.shopObj.isPeriod && !this.shopObj.endTime) {
+        return wxUtils.showModal('必要信息未填写', '自定义周期必须选择终止日期', { confirmText: '继续填写', showCancel: false, confirmColor: '#7F2F37' })
       }
       if (!this.shopObj.name || !this.shopObj.shopArea || !this.shopObj.shopMonthlyRent || !this.shopObj.clerkAmount) {
         return wxUtils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
@@ -179,63 +193,38 @@ export default {
     }
   },
   async onShow() {
-    // if (this.sourceType !== 'newShop') {
-    //   this.initData()
-    // }
+    // 如果没有范围 则查询一遍
     if (this.rangeParams.salesRangeList.length == 0) {
       let { data } = await wxUtils.request(api.GetParams, this)
       this.rangeParams = data
     }
-    // TODO 如果是修改诊断
-    if (false) {
-
-    } else {
-      // 如果是当前店铺新增诊断
-      if (this.sourceType === 'newShopDiag') {
-        const shopId = this.$getRoute().shopId
-        const name = this.$getRoute().name
-        this.shopObj.shopId = shopId
-        this.shopObj.name = name
-      }
-      // 如果是当前店铺补全诊断
-      if (this.sourceType === 'finishShopDiag') {
-        const diagnoseId = this.$getRoute().diagnoseId
-        const shopId = this.$getRoute().shopId
-        const name = this.$getRoute().name
-        let { data } = await wxUtils.request(api.DiagnoseGetById, this, { shopId, diagnoseId })
-        this.$store.state.shopObj = {
-          shopId: data.shopId,
-          isPeriod: data.isPeriod ? true : false,
-          startTime: data.analysisStartTime,
-          endTime: data.analysisEndTime,
-          periodCount: data.periodCount,
-          name,
-          shopArea: data.shopArea,
-          shopMonthlyRent: data.shopMonthlyRent,
-          clerkAmount: data.clerkAmount,
-          averageInventoryId: data.rawAverageInventory,
-          monthlySalesId: data.rawMonthlySales,
-          goldSalesProportion: data.goldSalesProportion,
-          goldInventoryId: data.rawGoldInventory,
-          goldAverageGrossProfitRate: data.goldAverageGrossProfitRate,
-          diagnoseId
-        }
-      }
-
-      if (!this.shopObj.startTime) {
-        this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
-        this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
-        this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
-        this.shopObj.startTime = this.diagDate
-      }
+    // 如果是当前店铺新增诊断
+    if (this.sourceType === 'newShopDiag') {
+      const shopId = this.$getRoute().shopId
+      const name = this.$getRoute().name
+      this.shopObj.shopId = shopId
+      this.shopObj.name = name
     }
-
+    // 如果是当前店铺修改诊断
+    if (this.sourceType === 'patch') {
+      const diagItem = JSON.parse(this.$getRoute().diagItem)
+      this.copyToShopObj(diagItem, diagItem.shopName, diagItem.id)
+    }
+    // 如果是当前店铺补全诊断
+    if (this.sourceType === 'finishShopDiag') {
+      const diagnoseId = this.$getRoute().diagnoseId
+      const shopId = this.$getRoute().shopId
+      const name = this.$getRoute().name
+      let { data } = await wxUtils.request(api.DiagnoseGetById, this, { shopId, diagnoseId })
+      this.copyToShopObj(data, name, diagnoseId)
+    }
+    if (!this.shopObj.startTime) {
+      this.shopObj.averageInventoryId = this.rangeParams.averageInventoryRangeList[0].id
+      this.shopObj.goldInventoryId = this.rangeParams.goldInventoryRangeList[0].id
+      this.shopObj.monthlySalesId = this.rangeParams.salesRangeList[0].id
+      this.shopObj.startTime = this.diagDate
+    }
   },
-  onUnload() {
-    // if (this.sourceType !== 'newShop') {
-    //   }
-    // this.initData()
-  }
 }
 </script>
 <style lang="less" scoped>

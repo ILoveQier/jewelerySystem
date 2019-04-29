@@ -169,15 +169,12 @@ export default {
     })
     if (!this.brandObj.loc.id) {
       this.list = []
-      await wxUtils.request(api.CityList, this).then(res => {
-        this.cityList = res.data
-        this.cityList.forEach(item => {
-          item.data.forEach(e => {
-            this.list.push({
-              id: e.id,
-              name: e.name
-            })
-          })
+      let { data } = await wxUtils.request(api.CityList, this)
+      this.cityList = data.cities_group
+      data.cities_origin.forEach(e => {
+        this.list.push({
+          id: e.id,
+          name: e.name
         })
       })
       this.loc = { id: -1, name: '未知地点' }

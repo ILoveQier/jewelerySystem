@@ -14,18 +14,31 @@ export default {
   components: {
     mpvueEcharts,
   },
-  props:['data1','data2'],
+  props: ['data1', 'data2'],
   data() {
     return {
       echarts,
       onInit: this.initChart,
-      // data1: ['2019/04', '2019/05', '2019/06', '2019/07', '2019/08', '2019/09', ''],
-      // data2: [28, 22, 13, 25, 18, 12],
-      // data1: ['2019/04'],
-      // data2: [23]
+    }
+  },
+  watch: {
+    data1: async function () {
+      this.init()
     }
   },
   methods: {
+    async init() {
+      let isDisable = this.data1.length === 1
+      if (this.data1.length < 5) {
+        //  不支持forof
+        for (let i = 0; i < 5; i++) {
+          this.data1.push('')
+        }
+      }
+      await $utils.sleep(300)
+      // 确保只有一个数据的显示
+      this.draw(this.data1, this.data2, isDisable)
+    },
     draw(data1, data2, isDisable) {
       let option = {
         color: ['#C1A46C'],
@@ -109,16 +122,7 @@ export default {
     },
   },
   async onLoad(ops) {
-    let isDisable = this.data1.length === 1
-    if (this.data1.length < 5) {
-      //  不支持forof
-      for (let i = 0; i < 5; i++) {
-        this.data1.push('')
-      }
-    }
-    await $utils.sleep(300)
-    // 确保只有一个数据的显示
-    this.draw(this.data1, this.data2, isDisable)
+    this.init()
   }
 }
 </script> 

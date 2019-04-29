@@ -43,17 +43,15 @@ export default {
     }
   },
   methods: {
-    goDel(shopId, index) {
-      wxUtils.request(api.ShopDelete, this, { shopIds: shopId })
-        .then(async res => {
-          wx.showToast({
-            title: '删除成功',
-            duration: 1500,
-            mask: false,
-          });
-          let { data } = await wxUtils.request(api.ShopList, this)
-          this.shopsList = data.shopsList
-        })
+    async goDel(shopId, index) {
+      let { res } = await wxUtils.request(api.ShopDelete, this, { shopIds: shopId })
+      let { data } = await wxUtils.request(api.ShopList, this)
+      this.shopsList = data.shopsList
+      wx.showToast({
+        title: res.errno ? '删除失败' : '删除成功',
+        duration: 1000,
+        mask: true,
+      });
     },
     init() {
       this.$store.state.brandObj = {

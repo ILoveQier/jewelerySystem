@@ -3,14 +3,14 @@
     <div class="record-bgc">
       <div class="record-info">
         <div class="record-title">
-          <div>xxx店铺</div>
-          <div>2019-03 月度诊断报告</div>
+          <div>{{diagItem.shopName}}店铺</div>
+          <div>{{diagItem.analysisStartTime}} 月度诊断报告</div>
         </div>
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/report.png"
              alt="">
       </div>
     </div>
-    <ReturnRate></ReturnRate>
+    <ReturnRate :storageReturn='storageReturn'></ReturnRate>
     <IndexRate @clickItem='clickItem'></IndexRate>
     <!-- 更新删除 -->
     <footer>
@@ -78,8 +78,9 @@ export default {
       flag: false,
       showPro: false,
       item: {},
-      diagItemInfo: {},
-      scrollTop: 0
+      diagItem: {},
+      scrollTop: 0,
+      storageReturn: {}
     }
   },
   computed: {
@@ -107,22 +108,28 @@ export default {
   methods: {
     updateDiag() {
       this.$store.state.sourceType = 'patch'
+      wx.navigateTo({
+        url: '/pages/diagnosis/main?diagItem=' + JSON.stringify(this.diagItem),
+      });
     },
     deleteDiag() {
       wxUtils.showModal('提示', '确认删除本条诊断吗？', { confirmColor: '#82343B' }).then(async r => {
         if (r === 'confirm') {
-          let { res } = await wxUtils.request(api.DiagnoseDelete, this, { shopId: this.diagItemInfo.shopId, diagnoseId: this.diagItemInfo.id })
-          if (res.errno === 0) {
+          let { data } = await wxUtils.request(api.DiagnoseDelete, this, { shopId: this.diagItem.shopId, diagnoseId: this.diagItem.id })
+          if (data === {}) {
             wx.showToast({
               title: '删除成功',
-              duration: 1500,
+              duration: 1000,
               mask: true,
               success: async _ => {
-                await wxUtils.sleep(1000)
                 wx.navigateBack({
                   delta: 1
                 })
               }
+            });
+          } else {
+            wx.switchTab({
+              url: '/pages/home/main'
             });
           }
         }
@@ -138,7 +145,9 @@ export default {
     },
   },
   onLoad() {
-    this.diagItemInfo = JSON.parse(this.$getRoute().diagItemInfo)
+    this.diagItem = JSON.parse(this.$getRoute().diagItem)
+    this.storageReturn.rate = this.diagItem.storegeReturnProportion && this.diagItem.storegeReturnProportion.toFixed(1),
+      this.storageReturn.level = this.diagItem.storegeReturnProportionRank
   },
   onPageScroll: function (e) {
     this.scrollTop = e.scrollTop

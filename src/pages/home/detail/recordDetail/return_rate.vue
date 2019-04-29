@@ -3,9 +3,9 @@
     <div class="left">
       <span>库存回报率</span>
       <span class="red"
-            style="margin-bottom:30rpx">9.4%</span>
+            style="margin-bottom:30rpx">{{storageReturn.rate}}%</span>
       <span>指标等级</span>
-      <span class="red">中等</span>
+      <span class="red">{{storageReturn.level}}</span>
     </div>
     <div class="right">
       <mpvue-echarts :echarts="echarts"
@@ -20,6 +20,7 @@ import mpvueEcharts from 'mpvue-echarts'
 
 let chart = null;
 export default {
+  props:['storageReturn'],
   components: {
     mpvueEcharts,
   },
@@ -49,7 +50,7 @@ export default {
           {
             name: '访问来源',
             type: 'pie',
-            radius: ['60%', '65%'],
+            radius: ['65%', '70%'],
             label: {
               padding: [30, 0, 0, 0],
               position: 'center',
@@ -85,14 +86,10 @@ export default {
       return chart
     },
   },
-  async onLoad(ops) {
-    let data = {
-      rate: 9.5,
-      level: '中等'
-    }
+  async onLoad() {
     await $utils.sleep(300)
     // 确保只有一个数据的显示
-    this.draw(data)
+    this.draw(this.storageReturn)
   }
 }
 </script> 

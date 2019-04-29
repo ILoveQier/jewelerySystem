@@ -97,15 +97,22 @@ export default {
         })
     },
     goDetail() {
-      // TODO 判断店铺的评级 S最大，剩下的都一个颜色 ， shop里面的字段需要和diagnosis一致
       if (!this.shop.shopRank) {
         this.brandObj.loc = this.shop.wxCity
         this.brandObj.brand = this.shop.wxJewelryBrand
+        if (!this.shop.lackInfo) {
+          // 删除了最后一条诊断，则lackInfo也为null,需要新建诊断
+          this.$store.state.sourceType = 'newShopDiag'
+          wx.navigateTo({
+            url: '/pages/diagnosis/main?shopId=' + this.shop.id + '&name=' + this.shop.name,
+          });
+          return 
+        }
         this.$store.state.sourceType = 'finishShopDiag'
         wx.navigateTo({
           url: '/pages/diagnosis/main?diagnoseId=' + this.shop.lackInfo + '&shopId=' + this.shop.id + '&name=' + this.shop.name,
         });
-        // return 
+        return 
       }
       wx.navigateTo({
         url: '/pages/home/detail/main?shop=' + JSON.stringify(this.shop),

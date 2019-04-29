@@ -29,11 +29,11 @@
              alt="">
       </div>
     </div>
-    <DetailEchart :data1='shopInfo.chart.date'
-                  :data2='shopInfo.chart.score'
-                  v-if="shopInfo.chart"></DetailEchart>
-    <Record :diagInfo='shopInfo'
-            v-if="shopInfo.notPeriodList || shopInfo.periodList"></Record>
+    <DetailEchart :data1='diagInfo.chart.date'
+                  :data2='diagInfo.chart.score'
+                  v-if="diagInfo.chart"></DetailEchart>
+    <Record :diagInfo='diagInfo'
+            v-if="diagInfo.notPeriodList || diagInfo.periodList"></Record>
     <button hover-class="go-tap"
             @click="goDiag">添加诊断</button>
   </div>
@@ -57,16 +57,13 @@ export default {
     return {
       shopName: '',
       flag: false,
-      shopInfo: {}
+      diagInfo: {}
     }
   },
   methods: {
     // 添加诊断
     goDiag() {
       this.$store.state.sourceType = 'newShopDiag'
-      //修改brandObj
-      this.brandObj.loc = this.shop.wxCity
-      this.brandObj.brand = this.shop.wxJewelryBrand
       wx.navigateTo({
         url: '/pages/diagnosis/main?shopId=' + this.shop.id + '&name=' + this.shop.name,
       });
@@ -87,12 +84,12 @@ export default {
   async onShow() {
     this.shop = JSON.parse(this.$getRoute().shop)
     this.shopName = this.shop.name
+    this.brandObj.loc = this.shop.wxCity
+    this.brandObj.brand = this.shop.wxJewelryBrand
     let { data } = await wxUtils.request(api.DiagnoseList, this, { shopId: this.shop.id })
-    this.shopInfo = data
+    this.diagInfo = data
+    this.diagInfo.shopName = this.shopName
   },
-  onUnload() {
-    this.shopInfo = {}
-  }
 }
 </script> 
 <style lang="less" scoped>

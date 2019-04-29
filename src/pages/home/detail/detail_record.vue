@@ -33,8 +33,9 @@ export default {
   },
   methods: {
     goRecordDetail(item) {
+      item.shopName = this.diagInfo.shopName
       wx.navigateTo({
-        url: '/pages/home/detail/recordDetail/main?diagItemInfo=' + JSON.stringify(item),
+        url: '/pages/home/detail/recordDetail/main?diagItem=' + JSON.stringify(item),
       });
     }
   },
