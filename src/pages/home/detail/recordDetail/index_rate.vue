@@ -18,7 +18,7 @@
                :key="i">
             <span>{{item[1]}}</span>
             <span>{{item[0]}}</span>
-            <span>中等</span>
+            <span>{{item[2]}}</span>
           </div>
         </div>
       </div>
@@ -40,8 +40,14 @@ import echarts from 'echarts'
 import mpvueEcharts from 'mpvue-echarts'
 let chart = null;
 export default {
+  props: ['diagItem'],
   components: {
     mpvueEcharts,
+  },
+  watch: {
+    diagItem: function () {
+      this.initDraw()
+    }
   },
   data() {
     return {
@@ -51,6 +57,45 @@ export default {
     }
   },
   methods: {
+    async initDraw() {
+      let data = []
+      let obj = this.diagItem
+
+      this.indexObj = {
+        benefit: {
+          obj: [['毛利率', obj.grossProfitRate, obj.grossProfitRateRank, obj.grossProfitRateScore, obj.grossProfitRateStandard],
+          ['店铺坪效', obj.perSquareMeterProfit, obj.perSquareMeterProfitRank, obj.perSquareMeterProfitScore, obj.perSquareMeterProfitStandard]],
+          color: '#ACCFF4',
+          name: '盈利水平'
+        }, stock: {
+          obj: [['月库存周转率', obj.monthlyInventoryTurnoverRate, obj.monthlyInventoryTurnoverRateRank, obj.monthlyInventoryTurnoverRateScore, obj.monthlyInventoryTurnoverRateStandard],
+          ['库存结构', obj.inventoryStructure, obj.inventoryStructureRank, obj.inventoryStructureScore, obj.inventoryStructureStandard],
+          ['总库存标准', obj.inventoryStandard, obj.inventoryStandardRank, obj.inventoryStandardScore, obj.inventoryStandardStandard]],
+          color: '#C67D82',
+          name: '库存配置水平'
+        }, employee: {
+          obj: [['月均人员绩效', obj.monthlyAverageStaffPerformance, obj.monthlyAverageStaffPerformanceRank, obj.monthlyAverageStaffPerformanceScore, obj.monthlyAverageStaffPerformanceStandard],
+          ['店员数量', obj.clerkAmount, obj.clerkAmountRank, obj.clerkAmountScore, obj.clerkAmountStandard]],
+          color: '#8CC7C7',
+          name: '员工技能水平'
+        }
+      }
+      for (const key in this.indexObj) {
+        let indexObj = this.indexObj[key]
+        let obj = indexObj.obj
+        for (const o in obj) {
+          data.push({
+            'value': obj[o].slice(),
+            'itemStyle': {
+              'color': indexObj.color
+            }
+          })
+        }
+      }
+      await wxUtils.sleep(500)
+      // 确保只有一个数据的显示
+      this.draw(data)
+    },
     draw(data) {
       let option = {
         dataZoom: {
@@ -144,37 +189,10 @@ export default {
     },
   },
   async onLoad() {
-    let data = []
-    this.indexObj = {
-      benefit: {
-        obj: [['毛利率', 12], ['店铺坪效', 24]],
-        color: '#ACCFF4',
-        name: '盈利水平'
-      }, stock: {
-        obj: [['月库存周转率', 31], ['库存结构', 41], ['总库存标准', 55]],
-        color: '#C67D82',
-        name: '库存配置水平'
-      }, employee: {
-        obj: [['月均人员绩效', 68], ['店员数量', 91]],
-        color: '#8CC7C7',
-        name: '员工技能水平'
-      }
-    }
-    for (const key in this.indexObj) {
-      let indexObj = this.indexObj[key]
-      let obj = indexObj.obj
-      for (const o in obj) {
-        data.push({
-          'value': obj[o].slice(),
-          'itemStyle': {
-            'color': indexObj.color
-          }
-        })
-      }
-    }
-    await wxUtils.sleep(500)
-    // 确保只有一个数据的显示
-    this.draw(data)
+    this.initDraw()
+  },
+  onUnload() {
+    this.diagItem = {}
   }
 }
 </script> 

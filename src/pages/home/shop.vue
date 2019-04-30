@@ -17,9 +17,9 @@
     </div>
     <!-- 根据店铺的评级判断展示方式 -->
     <div class="shop-level"
-         :class="{isS:rank==='S'}"
-         v-if="rank">
-      <span>{{rank}}</span>
+         :class="{isS:shop.shopRank==='S'}"
+         v-if="shop.shopRank">
+      <span>{{shop.shopRank}}</span>
       <span>级</span>
     </div>
     <div class="go-patch"
@@ -44,7 +44,6 @@ export default {
   data() {
     return {
       typeVal: 0, // 用于判断滑动后赋予的值
-      rank: ''
     }
   },
   computed: mapState([
@@ -57,16 +56,8 @@ export default {
     currentIndex: function (newVal, oldVal) {
       newVal === this.index ? 1 : (this.typeVal = 0)
     },
-    shop: function () {
-      let rank = this.shop.shopRank
-      this.rank = rank ? rank.toUpperCase() : rank
-    }
+  },
 
-  },
-  onLoad() {
-    let rank = this.shop.shopRank
-    this.rank = rank ? rank.toUpperCase() : rank
-  },
   methods: {
     touchStart(e) {
       // 获取移动距离，可以通过打印出e，然后分析e的值得出

@@ -11,7 +11,8 @@
       </div>
     </div>
     <ReturnRate :storageReturn='storageReturn'></ReturnRate>
-    <IndexRate @clickItem='clickItem'></IndexRate>
+    <IndexRate @clickItem='clickItem'
+               :diagItem='diagItem'></IndexRate>
     <!-- 更新删除 -->
     <footer>
       <div class="footer-item">
@@ -32,14 +33,26 @@
       <div class="title">
         <span>{{item[0]}}</span>
         <span class="down"
-              @click="flag=false"></span>
+              @click="clickClose"></span>
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/close.png"
-             @click="flag=false">
+             @click="clickClose">
       </div>
       <div class="words">
         指标含义。。。
       </div>
       <div class="progress">
+        <div class="real-val">
+          <span :style="{marginLeft: score + '%',float:'left'}"
+                v-if="score<50"
+                :class="{left:score<50,right:score>=50}">{{item[1]}}</span>
+          <span :style="{marginRight: 100 - score + '%',float:'right'}"
+                v-else
+                :class="{left:score<50,right:score>=50}">{{item[1]}}</span>
+        </div>
+        <div class="split-score">
+          <span v-for="score in scoreList"
+                :key="score">{{score*rate}}{{(item[0] ==='毛利率' || item[0] ==='月库存周转率')?'%':((item[0] ==='店铺坪效'||item[0] ==='月均人员绩效')?'元':'')}}</span>
+        </div>
         <div class="split">
           <span></span>
           <span></span>
@@ -53,7 +66,7 @@
           <span style="color:#B7CCE2">良好</span>
           <span style="color:#C1E9F5">优秀</span>
         </div>
-        <wxc-progress :percent="item[1]"
+        <wxc-progress :percent="score"
                       v-if="showPro"
                       stroke-width="20"
                       :active-color="acColor"></wxc-progress>
@@ -80,14 +93,17 @@ export default {
       item: {},
       diagItem: {},
       scrollTop: 0,
-      storageReturn: {}
+      storageReturn: {},
+      score: 0,
+      scoreList: [6, 7, 8, 9],
+      rate: 0
     }
   },
   computed: {
     ...mapState(["sourceType"]),
     acColor() {
       let color = '#BF99C1,'
-      let ac = this.item[1]
+      let ac = this.item[3]
       if (ac < 20 || !ac) {
         color = '#BF99C1'
       } else if (ac < 40) {
@@ -101,11 +117,15 @@ export default {
       }
       setTimeout(() => {
         this.showPro = true
-      }, 0);
+      }, 10);
       return color
-    }
+    },
   },
   methods: {
+    clickClose() {
+      this.flag = false;
+      this.item = {}
+    },
     updateDiag() {
       this.$store.state.sourceType = 'patch'
       wx.navigateTo({
@@ -136,18 +156,42 @@ export default {
       })
     },
     clickItem(item) {
+      if (this.item === item) {
+        return
+      }
       if (this.scrollTop < 200) {
         return
       }
       this.showPro = false
+
+      // 根据分数-50显示
+      let score = (parseInt(item[3]) - 50)
+      if (score < 0) {
+        this.score = 1
+      }
+      if (score > 100) {
+        this.score = 100
+      }
+      if (0 < score && score < 50) {
+        this.score = score * 2
+      }
+      if (50 <= score && score <= 100) {
+        this.score = score
+      }
+      this.rate = (item[4] / 10).toFixed(1)
       this.item = item
       this.flag = true
     },
   },
-  onLoad() {
+  onShow() {
     this.diagItem = JSON.parse(this.$getRoute().diagItem)
     this.storageReturn.rate = this.diagItem.storegeReturnProportion && this.diagItem.storegeReturnProportion.toFixed(1),
       this.storageReturn.level = this.diagItem.storegeReturnProportionRank
+  },
+  onUnload() {
+    this.flag = false;
+    this.showPro = false
+    this.item = {}
   },
   onPageScroll: function (e) {
     this.scrollTop = e.scrollTop
@@ -272,7 +316,7 @@ export default {
       height: 500rpx;
     }
     .words {
-      height: 300rpx;
+      height: 200rpx;
       background-color: #eee;
       margin-bottom: 10rpx;
       width: 100%;
@@ -281,12 +325,70 @@ export default {
       position: relative;
       width: 95%;
       height: 80rpx;
+      padding-top: 120rpx;
+      .real-val {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 60rpx;
+        .left,
+        .right {
+          display: inline-block;
+          font-size: 24rpx;
+          color: red;
+          background-color: lawngreen;
+          border-radius: 10%;
+          position: relative;
+          padding: 5rpx 15rpx;
+          box-sizing: border-box;
+          &::before {
+            content: "";
+            position: absolute;
+            color: lawngreen;
+            top: 90%;
+            width: 0;
+            height: 0;
+            border-top: 20rpx solid lawngreen;
+          }
+        }
+        .left {
+          &::before {
+            left: 10%;
+            border-right: 20rpx solid transparent;
+          }
+        }
+        .right {
+          &::before {
+            right: 10%;
+            border-left: 20rpx solid transparent;
+          }
+        }
+      }
+      .split-score {
+        position: absolute;
+        left: 0;
+        bottom: 10%;
+        display: flex;
+        justify-content: space-between;
+        span {
+          width: 110rpx;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 24rpx;
+          color: #999;
+          margin-left: 35rpx;
+          text-align: center;
+          &:nth-child(1) {
+            margin-left: 80rpx;
+          }
+        }
+      }
       .split {
         width: 80%;
         height: 20rpx;
         position: absolute;
         left: 0;
-        top: -19rpx;
+        bottom: 40%;
         span {
           display: inline-block;
           width: 5rpx;
@@ -299,7 +401,7 @@ export default {
         width: 100%;
         position: absolute;
         left: 30rpx;
-        bottom: 10%;
+        top: 0;
         span {
           font-size: 24rpx;
           margin-right: 13%;

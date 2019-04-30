@@ -17,7 +17,7 @@
           <i-col span="6">{{item.isPeriod ? '自定义诊断':'月度诊断'}}</i-col>
           <!-- // TODO 库存周转率需要获取 -->
           <i-col i-class='text-col' span="6">{{item.storegeReturnProportion}}%</i-col>
-          <i-col span="6"><span :class="{red:'A'==='A'}">A级</span></i-col>
+          <i-col span="6"><span :class="{red:item.letterRand==='s'}">{{item.letterRank}}级</span></i-col>
         </i-row>
       </div>
     </div>

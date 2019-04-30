@@ -79,7 +79,8 @@ export default {
   },
   data() {
     return {
-      multiDate: [['2027/09', '2017/10', '2017/11', '2017/12', '2018/01', '2018/02', '2018/03', '2019/04'], ['2018/09', '2018/10', '2018/11', '2018/12', '2019/01', '2019/02', '2019/03', '2019/04']],
+      // TODO 自定义诊断周期的范围
+      multiDate: [['2017/09', '2017/10', '2017/11', '2017/12', '2018/01', '2018/02', '2018/03', '2018/04'], ['2018/09', '2018/10', '2018/11', '2018/12', '2019/01', '2019/02', '2019/03', '2019/04']],
       rangeParams: {
         averageInventoryRangeList: [],
         goldInventoryRangeList: [],
@@ -124,8 +125,6 @@ export default {
       this.shopObj.startTime = e.mp.detail.value.replace('-', '/')
     },
     async saveDiagnosis() {
-      console.log(this.shopObj.shopId , this.shopObj.diagnoseId);
-      
       this.shopObj.startTime = this.shopObj.startTime.replace('/', '')
       if (this.shopObj.endTime) {
         this.shopObj.endTime = this.shopObj.endTime.replace('/', '')

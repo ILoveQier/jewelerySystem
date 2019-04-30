@@ -20,7 +20,7 @@ import mpvueEcharts from 'mpvue-echarts'
 
 let chart = null;
 export default {
-  props:['storageReturn'],
+  props: ['storageReturn'],
   components: {
     mpvueEcharts,
   },
@@ -28,6 +28,13 @@ export default {
     return {
       echarts,
       onInit: this.initChart,
+    }
+  },
+  watch: {
+    storageReturn: async function () {
+      await $utils.sleep(300)
+      // 确保只有一个数据的显示
+      this.draw(this.storageReturn)
     }
   },
   methods: {
