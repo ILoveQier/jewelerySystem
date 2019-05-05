@@ -5,7 +5,7 @@
        @click="goDetail"
        :data-type="typeVal">
     <div class="shop-info">
-      <span class="name-info">{{shop.id}}</span>
+      <!-- <span class="name-info">{{shop.id}}</span> -->
       <span class="name-info">{{shop.name}}</span>
       <div class="sub-info">
         <span>{{shop.wxJewelryBrand.name}}</span>
@@ -76,7 +76,6 @@ export default {
       } else if (this.endX - this.startX > 30)
         this.typeVal = 0
     },
-
     // 删除
     deleteItem(shopId, index) {
       let title = '店铺诊断记录删除不可恢复'
@@ -120,9 +119,7 @@ export default {
   border-bottom: 2rpx solid #eee;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  //   垂直居中，  // 子div水平排列
   display: flex;
-  //   justify-content:center;
   align-items: center;
   .shop-info {
     width: 48%;
@@ -136,10 +133,12 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      margin:  20rpx 0;
     }
     .sub-info {
       color: #97a0ad;
       font-size: 26rpx;
+      margin-bottom: 20rpx;
       img {
         margin-left: 10rpx;
         width: 20rpx;

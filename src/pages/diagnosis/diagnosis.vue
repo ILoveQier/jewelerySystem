@@ -161,9 +161,9 @@ export default {
         return wxUtils.showModal('必要信息未填写', '自定义周期必须选择终止日期', { confirmText: '继续填写', showCancel: false, confirmColor: '#7F2F37' })
       }
       if (!this.shopObj.name || !this.shopObj.shopArea || !this.shopObj.shopMonthlyRent || !this.shopObj.clerkAmount) {
-        if (this.sourceType === 'newShopDiag') {
+        if (this.sourceType === 'newShopDiag' || this.sourceType === 'finishShopDiag') {
           // 如果是当前店铺新增诊断 则必须填完
-          return wxUtils.showModal('必要信息未填写', '重要信息必须填全', { confirmText: '必须填完', showCancel: false, confirmColor: '#7F2F37' })
+          return wxUtils.showModal('必要信息未填写', '重要信息必须填全', { confirmText: '确定', showCancel: false, confirmColor: '#7F2F37' })
         }
         return wxUtils.showModal('部分必要信息未填写', '重要信息的缺失会造成诊断结果失实', { confirmText: '继续填写', cancelColor: '#999', confirmColor: '#7F2F37', cancelText: '稍后再填' }).then(async res => {
           // 点击取消跳转到主页

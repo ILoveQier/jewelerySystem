@@ -2,8 +2,8 @@
   <div class="me-container">
     <div class="me-infos">
       <div class="me-intro">
-        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/user.png">
-        <span>haru000</span>
+        <img :src="userInfo.avatarUrl">
+        <span>{{userInfo.nickName}}</span>
       </div>
       <div class="me-shop-intro">
         <div class="shop-info">
@@ -31,6 +31,7 @@
 export default {
   data() {
     return {
+      userInfo:{}
     }
   },
   methods: {
@@ -41,6 +42,7 @@ export default {
     }
   },
   onLoad() {
+    this.userInfo = wx.getStorageSync('userInfo');
   }
 }
 </script>

@@ -4,7 +4,8 @@
       <span class="title">填写店铺详情</span>
       <div class="inside-info">
         <div class="inside-item">
-          <span>店铺面积</span>
+          <span v-if="shopObj.shopArea >0">店铺面积</span>
+          <span v-else style="color:#c92731">店铺面积*</span>
           <input type="number"
                  maxlength="5"
                  v-model="shopObj.shopArea"
@@ -13,7 +14,8 @@
           <span class="inside-unit">平方米</span>
         </div>
         <div class="inside-item">
-          <span>店铺租金</span>
+          <span v-if="shopObj.shopMonthlyRent >0">店铺租金</span>
+          <span v-else style="color:#c92731">店铺租金*</span>
           <input type="number"
                  maxlength="7"
                  v-model="shopObj.shopMonthlyRent"
@@ -22,7 +24,8 @@
           <span class="inside-unit">万元</span>
         </div>
         <div class="inside-item">
-          <span>店员人数</span>
+          <span v-if="shopObj.clerkAmount >0">店员人数</span>
+          <span v-else style="color:#c92731">店员人数*</span>
           <input type="number"
                  maxlength="3"
                  v-model="shopObj.clerkAmount"
@@ -37,7 +40,7 @@
             <span>平均库存</span>
             <div>
               <span>{{range.averageInventoryRangeList[shopObj.averageInventoryId === 0 ? 0:(shopObj.averageInventoryId - range.averageInventoryRangeList[0].id)].paramRange}}</span>
-              <span style="color:#7F2F37;padding-left:20rpx">件数</span>
+              <span style="color:#7F2F37;padding-left:20rpx">万元</span>
             </div>
           </div>
           <slider @changing="sliderChanging($event,'averageInventoryId')"
@@ -46,9 +49,9 @@
                   :min="range.averageInventoryRangeList[0].id"
                   :max="range.averageInventoryRangeList[range.averageInventoryRangeList.length-1].id"
                   step=1
-                  activeColor='#eee'
+                  backgroundColor='#eee'
                   block-size='16'
-                  backgroundColor='#84373F'
+                  activeColor='#84373F'
                   block-color='#C1A46C' />
         </div>
         <div class="average-slider">
@@ -65,9 +68,9 @@
                   :min="range.salesRangeList[0].id"
                   :max="range.salesRangeList[range.salesRangeList.length-1].id"
                   step=1
-                  activeColor='#eee'
+                  backgroundColor='#eee'
                   block-size='16'
-                  backgroundColor='#84373F'
+                  activeColor='#84373F'
                   block-color='#C1A46C' />
         </div>
       </div>
@@ -86,9 +89,9 @@
                   min="0"
                   max="100"
                   step=1
-                  activeColor='#eee'
+                  backgroundColor='#eee'
                   block-size='16'
-                  backgroundColor='#84373F'
+                  activeColor='#84373F'
                   block-color='#C1A46C' />
         </div>
         <div class="average-slider">
@@ -105,9 +108,9 @@
                   :min="range.goldInventoryRangeList[0].id"
                   :max="range.goldInventoryRangeList[range.goldInventoryRangeList.length-1].id"
                   step=1
-                  activeColor='#eee'
+                  backgroundColor='#eee'
                   block-size='16'
-                  backgroundColor='#84373F'
+                  activeColor='#84373F'
                   block-color='#C1A46C' />
         </div>
         <div class="average-slider">
@@ -124,9 +127,9 @@
                   min="0"
                   max="100"
                   step=1
-                  activeColor='#eee'
+                  backgroundColor='#eee'
                   block-size='16'
-                  backgroundColor='#84373F'
+                  activeColor='#84373F'
                   block-color='#C1A46C' />
         </div>
       </div>
@@ -142,7 +145,6 @@ export default {
     },
   },
   onLoad() {
-    // console.log(this.shopObj);
   }
 }
 </script>
@@ -151,7 +153,7 @@ span {
   font-size: 34rpx;
 }
 .shop-inside-container {
-  padding: 0 20rpx;
+  padding: 0 30rpx;
 }
 .shop-inside {
   display: flex;
