@@ -35,7 +35,7 @@ export default {
           this.data1.push('')
         }
       }
-      await $utils.sleep(300)
+      await $utils.sleep(500)
       // 确保只有一个数据的显示
       this.draw(this.data1, this.data2, isDisable)
     },

@@ -32,7 +32,7 @@ export default {
   },
   watch: {
     storageReturn: async function () {
-      await $utils.sleep(300)
+      await $utils.sleep(500)
       // 确保只有一个数据的显示
       this.draw(this.storageReturn)
     }

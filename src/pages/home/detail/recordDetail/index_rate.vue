@@ -27,11 +27,6 @@
       <div class="title">诊断结果</div>
       <div class="words"></div>
     </div>
-    <div class="share">
-      <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/share.png"
-           alt="">
-      <span>分享</span>
-    </div>
   </div>
 </template>
 <script scoped>
@@ -193,7 +188,7 @@ export default {
   },
   onUnload() {
     this.diagItem = {}
-  }
+  },
 }
 </script> 
 <style lang="less" scoped>
@@ -275,21 +270,6 @@ export default {
       width: 100%;
       height: 250rpx;
       background-color: #f7f7fa;
-    }
-  }
-  .share {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 100rpx;
-    img {
-      width: 100rpx;
-      height: 100rpx;
-    }
-    span {
-      color: #c1a46c;
-      font-size: 28rpx;
     }
   }
 }

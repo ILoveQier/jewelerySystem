@@ -36,21 +36,30 @@ export default {
         wx.setStorageSync('screenWidth', res.screenWidth);
       },
     })
-    if (!user) {
-      wx.login({
-        success: (res) => {
-          if (res.code) {
-            this.code = res.code
-          }
-        }
-      });
-      return
-    }
-    wx.switchTab({
-      url: "/pages/home/main",
-    });
+    this.checkLogin()
   },
   methods: {
+    //检查登录状态
+    checkLogin: async function (e) {
+      let time = new Date();
+      let createTime = wx.getStorageSync('createTime');
+      let token = wx.getStorageSync('token');
+      if (!token || (time.getTime() - createTime > 10 * 3600 * 1000)) {
+        //不存在token,或者时间大于10分钟，调用登录
+        wx.login({
+          success: (res) => {
+            if (res.code) {
+              this.code = res.code
+            }
+          }
+        });
+      } else {
+        //token有效
+        wx.switchTab({
+          url: "/pages/home/main",
+        });
+      }
+    },
     handleUserInfo: async function (e) {
       this.userInfo = e.mp.detail.userInfo;
       if (this.userInfo) {
@@ -62,6 +71,9 @@ export default {
         wx.setStorageSync('userInfo', data.userInfo);
         wx.setStorageSync('token', data.token);
         wx.setStorageSync('userId', data.userId);
+        //将当前时间存到本地存储
+        let createTime = new Date();
+        wx.setStorageSync('createTime', createTime.getTime());
         this.userId = data.userId
         wx.switchTab({
           url: "/pages/home/main",

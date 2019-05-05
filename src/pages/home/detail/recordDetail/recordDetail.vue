@@ -13,8 +13,17 @@
     <ReturnRate :storageReturn='storageReturn'></ReturnRate>
     <IndexRate @clickItem='clickItem'
                :diagItem='diagItem'></IndexRate>
+    <div class="share-wrap">
+      <!-- 分享转发 -->
+      <button open-type='share'
+              class="share">
+        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/share.png"
+             alt="">
+        <span>分享</span>
+      </button>
+    </div>
     <!-- 更新删除 -->
-    <footer>
+    <footer v-if="isShare!=='1'">
       <div class="footer-item">
         <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/sett.png"
              alt="">
@@ -51,7 +60,7 @@
         </div>
         <div class="split-score">
           <span v-for="score in scoreList"
-                :key="score">{{score*rate}}{{(item[0] ==='毛利率' || item[0] ==='月库存周转率')?'%':((item[0] ==='店铺坪效'||item[0] ==='月均人员绩效')?'元':'')}}</span>
+                :key="score">{{score}}{{(item[0] ==='毛利率' || item[0] ==='月库存周转率')?'%':((item[0] ==='店铺坪效'||item[0] ==='月均人员绩效')?'元':(item[0] ==='总库存标准'?'万元':''))}}</span>
         </div>
         <div class="split">
           <span></span>
@@ -95,8 +104,9 @@ export default {
       scrollTop: 0,
       storageReturn: {},
       score: 0,
-      scoreList: [6, 7, 8, 9],
-      rate: 0
+      scoreList: [],
+      rate: 0,
+      isShare: 0
     }
   },
   computed: {
@@ -120,8 +130,28 @@ export default {
       }, 10);
       return color
     },
+
+  },
+  onShareAppMessage(res) {
+    return {
+      title: '星光珠宝小程序',
+      path: "/pages/home/detail/recordDetail/main?isShare=1&diagItem=" + JSON.stringify(this.diagItem),
+    };
   },
   methods: {
+    accMul(arg1, arg2) {
+      let m = 0, s1 = arg1.toString(),
+        s2 = arg2.toString();
+      if (s1.indexOf('.') !== -1) {
+        m += s1.split(".")[1].length
+      }
+      if (s2.indexOf('.') !== -1) {
+        m += s2.split(".")[1].length
+      }
+
+      let res = Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+      return res
+    },
     clickClose() {
       this.flag = false;
       this.item = {}
@@ -162,6 +192,7 @@ export default {
       if (this.scrollTop < 200) {
         return
       }
+      this.scoreList = []
       this.showPro = false
 
       // 根据分数-50显示
@@ -179,11 +210,18 @@ export default {
         this.score = score
       }
       this.rate = (item[4] / 10).toFixed(1)
+      let array = [6, 7, 8, 9]
+      for (let i = 0; i < array.length; i++) {
+        const e = array[i];
+        this.scoreList.push(this.accMul(e, this.rate))
+      }
+
       this.item = item
       this.flag = true
     },
   },
   onShow() {
+    this.isShare = this.$getRoute().isShare
     this.diagItem = JSON.parse(this.$getRoute().diagItem)
     this.storageReturn.rate = this.diagItem.storegeReturnProportion && this.diagItem.storegeReturnProportion.toFixed(1),
       this.storageReturn.level = this.diagItem.storegeReturnProportionRank
@@ -245,6 +283,28 @@ export default {
             margin-bottom: 50rpx;
           }
         }
+      }
+    }
+  }
+  .share-wrap {
+    position: relative;
+    button::after {
+      border: none;
+    }
+    .share {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 100rpx;
+      background-color: #fff;
+      img {
+        width: 100rpx;
+        height: 100rpx;
+      }
+      span {
+        color: #c1a46c;
+        font-size: 28rpx;
       }
     }
   }
@@ -388,7 +448,7 @@ export default {
         height: 20rpx;
         position: absolute;
         left: 0;
-        bottom: 40%;
+        bottom: 39%;
         span {
           display: inline-block;
           width: 5rpx;
