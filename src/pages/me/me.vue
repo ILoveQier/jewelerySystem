@@ -7,15 +7,15 @@
       </div>
       <div class="me-shop-intro">
         <div class="shop-info">
-          <span>04</span>
+          <span>{{userInfo.shopNum}}</span>
           <span>店铺数量</span>
         </div>
         <div class="shop-info">
-          <span>04</span>
+          <span>{{userInfo.brandNum}}</span>
           <span>品牌数量</span>
         </div>
         <div class="shop-info">
-          <span>06</span>
+          <span>{{userInfo.cityNum}}</span>
           <span>覆盖城市</span>
         </div>
       </div>
@@ -28,10 +28,12 @@
   </div>
 </template>
 <script>
+import wxUtils from '../../utils/wxUtils';
+import api from '../../../config/api.js'
 export default {
   data() {
     return {
-      userInfo:{}
+      userInfo: {}
     }
   },
   methods: {
@@ -41,8 +43,12 @@ export default {
       });
     }
   },
-  onLoad() {
+  async onLoad() {
     this.userInfo = wx.getStorageSync('userInfo');
+    let {data} = await this.$fly.get(api.FeedInfo)
+    this.userInfo.brandNum = data.data.brandNum
+    this.userInfo.cityNum = data.data.cityNum
+    this.userInfo.shopNum = data.data.shopNum
   }
 }
 </script>
@@ -118,17 +124,17 @@ export default {
     span {
       padding-left: 30rpx;
       font-size: 26rpx;
-      color: #9B9B9B;
+      color: #9b9b9b;
     }
     div {
       width: 286rpx;
       height: 80rpx;
-      background-color: #C1A46C;
+      background-color: #c1a46c;
       border-radius: 40rpx;
       text-align: center;
       line-height: 80rpx;
       margin-top: 58rpx;
-      color: #FFFFFF;
+      color: #ffffff;
       font-size: 30rpx;
     }
   }
