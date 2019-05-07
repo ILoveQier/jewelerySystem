@@ -79,8 +79,11 @@ export default {
         let indexObj = this.indexObj[key]
         let obj = indexObj.obj
         for (const o in obj) {
+          let res = []
+          res.push(obj[o][0])
+          res.push(obj[o][3] > 100 ? 100 : obj[o][3])
           data.push({
-            'value': obj[o].slice(),
+            'value': res,
             'itemStyle': {
               'color': indexObj.color
             }

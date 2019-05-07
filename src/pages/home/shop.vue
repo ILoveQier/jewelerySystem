@@ -1,39 +1,42 @@
 <template>
-  <div class="shop-container"
-       @touchstart="touchStart($event)"
-       @touchend="touchEnd($event)"
-       @click="goDetail"
-       :data-type="typeVal">
-    <div class="shop-info">
-      <!-- <span class="name-info">{{shop.id}}</span> -->
-      <span class="name-info">{{shop.name}}</span>
-      <div class="sub-info">
-        <span>{{shop.wxJewelryBrand.name}}</span>
-        &nbsp;|&nbsp;
-        <span>{{shop.wxCity.name}}</span>
-        <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/unlocation.png"
-             alt="">
+  <div class="shop-container">
+    <div class="shop-wrap"
+         @longpress="deleteItem(shop.id,index)"
+         @touchstart="touchStart($event)"
+         @touchend="touchEnd($event)"
+         @click="goDetail"
+         :data-type="typeVal">
+      <div class="shop-info">
+        <!-- <span class="name-info">{{shop.id}}</span> -->
+        <span class="name-info">{{shop.name}}</span>
+        <div class="sub-info">
+          <span>{{shop.wxJewelryBrand.name}}</span>
+          &nbsp;|&nbsp;
+          <span>{{shop.wxCity.name}}</span>
+          <img src="cloud://test-c9f00f.7465-test-c9f00f/jewelry/unlocation.png"
+               alt="">
+        </div>
+      </div>
+      <!-- 根据店铺的评级判断展示方式 -->
+      <div class="shop-level"
+           :class="{isS:shop.shopRank==='S'}"
+           v-if="shop.shopRank">
+        <span>{{shop.shopRank}}</span>
+        <span>级</span>
+      </div>
+      <div class="go-patch"
+           v-else>
+        <span class="patch-icon">--</span>
+        <div class="patch-info">补全信息 > </div>
+      </div>
+
+      <div class="delete"
+           @click.stop="deleteItem(shop.id,index)">
+        删除
       </div>
     </div>
-    <!-- 根据店铺的评级判断展示方式 -->
-    <div class="shop-level"
-         :class="{isS:shop.shopRank==='S'}"
-         v-if="shop.shopRank">
-      <span>{{shop.shopRank}}</span>
-      <span>级</span>
-    </div>
-    <div class="go-patch"
-         v-else>
-      <span class="patch-icon">--</span>
-      <div class="patch-info">补全信息 > </div>
-    </div>
-
-    <div class="delete"
-         @click.stop="deleteItem(shop.id,index)">
-      删除
-    </div>
-
   </div>
+
 </template>
 
 <script>
@@ -60,6 +63,7 @@ export default {
 
   methods: {
     touchStart(e) {
+
       // 获取移动距离，可以通过打印出e，然后分析e的值得出
       this.startX = e.clientX;
     },
@@ -96,13 +100,13 @@ export default {
           wx.navigateTo({
             url: '/pages/diagnosis/main?shopId=' + this.shop.id + '&name=' + this.shop.name,
           });
-          return 
+          return
         }
         this.$store.state.sourceType = 'finishShopDiag'
         wx.navigateTo({
           url: '/pages/diagnosis/main?diagnoseId=' + this.shop.lackInfo + '&shopId=' + this.shop.id + '&name=' + this.shop.name,
         });
-        return 
+        return
       }
       wx.navigateTo({
         url: '/pages/home/detail/main?shop=' + JSON.stringify(this.shop),
@@ -114,90 +118,95 @@ export default {
 
 <style lang="less" scoped>
 .shop-container {
-  height: 140rpx;
-  width: 150%;
-  border-bottom: 2rpx solid #eee;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  .shop-info {
-    width: 48%;
+  width: 100%;
+  overflow: hidden;
+  .shop-wrap {
+    height: 140rpx;
+    width: 150%;
+    border-bottom: 2rpx solid #eee;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    .name-info {
-      color: #333333;
-      font-size: 36rpx;
-      max-width: 400rpx;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      margin:  20rpx 0;
-    }
-    .sub-info {
-      color: #97a0ad;
-      font-size: 26rpx;
-      margin-bottom: 20rpx;
-      img {
-        margin-left: 10rpx;
-        width: 20rpx;
-        height: 20rpx;
+    align-items: center;
+    .shop-info {
+      width: 48%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .name-info {
+        color: #333333;
+        font-size: 36rpx;
+        max-width: 400rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 20rpx 0;
+      }
+      .sub-info {
+        color: #97a0ad;
+        font-size: 26rpx;
+        margin-bottom: 20rpx;
+        img {
+          margin-left: 10rpx;
+          width: 20rpx;
+          height: 20rpx;
+        }
       }
     }
-  }
-  .shop-level {
-    width: 15%;
-    padding-top: 40rpx;
-    padding-left: 55rpx;
-    color: #cbb180;
-    &.isS {
-      color: #98585e !important;
-    }
-    span {
-      &:nth-child(1) {
-        font-size: 74rpx;
-        font-style: italic;
-        font-weight: bold;
-        margin-right: 10rpx;
+    .shop-level {
+      width: 15%;
+      padding-top: 40rpx;
+      padding-left: 55rpx;
+      color: #cbb180;
+      &.isS {
+        color: #98585e !important;
       }
-      font-size: 30rpx;
+      span {
+        &:nth-child(1) {
+          font-size: 74rpx;
+          font-style: italic;
+          font-weight: bold;
+          margin-right: 10rpx;
+        }
+        font-size: 30rpx;
+      }
     }
-  }
-  .go-patch {
-    width: 15%;
-    padding-right: 55rpx;
-    .patch-icon {
-      color: #a5adb8;
-      padding-left: 100rpx;
+    .go-patch {
+      width: 15%;
+      padding-right: 55rpx;
+      .patch-icon {
+        color: #a5adb8;
+        padding-left: 100rpx;
+      }
+      .patch-info {
+        width: 160rpx;
+        height: 44rpx;
+        border-radius: 24rpx;
+        background: linear-gradient(#d1b772, #c1a46c);
+        font-size: 24rpx;
+        color: #fff;
+        line-height: 44rpx;
+        text-align: center;
+      }
     }
-    .patch-info {
-      width: 160rpx;
-      height: 44rpx;
-      border-radius: 24rpx;
-      background: linear-gradient(#d1b772, #c1a46c);
-      font-size: 24rpx;
+    .delete {
+      width: 100rpx;
+      height: 150rpx;
+      line-height: 150rpx;
+      background-color: #7f2f37;
       color: #fff;
-      line-height: 44rpx;
+      font-size: 34rpx;
       text-align: center;
     }
   }
-  .delete {
-    width: 100rpx;
-    height: 150rpx;
-    line-height: 150rpx;
-    background-color: #7f2f37;
-    color: #fff;
-    font-size: 34rpx;
-    text-align: center;
-  }
 }
+
 // 根据datatype 决定滑动方向
-.shop-container[data-type="0"] {
+.shop-wrap[data-type="0"] {
   transform: translateX(0);
 }
 
-.shop-container[data-type="1"] {
+.shop-wrap[data-type="1"] {
   transform: translateX(-135rpx);
 }
 </style>
